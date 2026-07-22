@@ -1,0 +1,17 @@
+{
+  "name": "serena-ambicion-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "App del Metodo Serena Ambicion - Jose Luis Valle Tulian",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "14.2.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}
