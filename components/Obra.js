@@ -1,21 +1,45 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { T } from "../lib/textos";
-import { PASOS, FASES } from "../lib/programa";
+import { PASOS, FASES, evidenciaDePaso, plantasLevantadas } from "../lib/programa";
+
+// ============================================================
+// LA OBRA v3 - viva, por evidencia real.
+// Las plantas se levantan cuando la EVIDENCIA existe en el
+// estado (proyecto escrito, elecciones, dias de ritual,
+// diagnosticos), no con un click. Celebracion medida al subir.
+// ============================================================
 
 export default function Obra({ state, update, goTo }) {
-  const done = state.pasosCompletados || [];
+  const levantadas = plantasLevantadas(state);
   const [abierto, setAbierto] = useState(null);
+  const [celebrar, setCelebrar] = useState(null); // n de la planta recien levantada
+  const prevRef = useRef(levantadas.length);
 
-  // el paso actual es el primero no completado
-  const actual = PASOS.find((p) => !done.includes(p.n))?.n || null;
+  // Celebracion medida: solo cuando SUBE el numero de plantas.
+  useEffect(() => {
+    if (levantadas.length > prevRef.current) {
+      const nueva = levantadas[levantadas.length - 1];
+      setCelebrar(nueva);
+      const t = setTimeout(() => setCelebrar(null), 2600);
+      return () => clearTimeout(t);
+    }
+    prevRef.current = levantadas.length;
+  }, [levantadas.length]);
 
-  function toggleEvidencia(n) {
-    const nuevos = done.includes(n)
-      ? done.filter((x) => x !== n)
-      : [...done, n];
-    update({ pasosCompletados: nuevos });
+  // El paso actual = el primero no levantado.
+  const actual = PASOS.find((p) => !levantadas.includes(p.n))?.n || null;
+  const pct = Math.round((levantadas.length / PASOS.length) * 100);
+
+  // A donde manda cada paso para conseguir su evidencia.
+  function irAPorEvidencia(paso) {
+    if (paso.clave === "proyecto" || paso.clave === "instalacion")
+      return goTo("plano");
+    if (paso.clave === "optar-elegir" || paso.clave === "autonomia")
+      return goTo("ritual");
+    if (paso.instrumento) return goTo("mas"); // Instrumentos viven en Mas
+    return goTo("plano");
   }
 
   return (
@@ -28,36 +52,50 @@ export default function Obra({ state, update, goTo }) {
 
       <div style={{ marginBottom: 8 }}>
         <span className="pill">
-          {done.length} / {PASOS.length} plantas
+          {levantadas.length} / {PASOS.length} plantas levantadas
         </span>
       </div>
       <div className="prog-track">
-        <div
-          className="prog-fill"
-          style={{ width: (done.length / PASOS.length) * 100 + "%" }}
-        />
+        <div className="prog-fill" style={{ width: pct + "%" }} />
       </div>
 
-      {/* Edificio (de arriba hacia abajo se ve el techo; usamos column-reverse) */}
+      {/* Edificio: de abajo (cimientos) hacia arriba */}
       <div className="obra-wrap">
         {PASOS.map((p) => {
-          const isDone = done.includes(p.n);
+          const ev = evidenciaDePaso(p, state);
+          const isDone = ev.hecha;
           const isCurrent = p.n === actual;
+          const parcial = !isDone && ev.cuanto > 0;
           return (
             <div key={p.n}>
               <button
                 className={
                   "planta" +
                   (isDone ? " done" : "") +
-                  (isCurrent ? " current" : "")
+                  (isCurrent ? " current" : "") +
+                  (celebrar === p.n ? " celebra" : "")
                 }
                 style={{ width: "100%", cursor: "pointer" }}
                 onClick={() => setAbierto(abierto === p.n ? null : p.n)}
               >
-                <div className="planta-n">{p.n}</div>
+                <div className="planta-n">{isDone ? "\u2713" : p.n}</div>
                 <div className="planta-body">
                   <div className="planta-t">{p.titulo}</div>
                   <div className="planta-s">{p.subtitulo}</div>
+                  {/* progreso parcial de la evidencia */}
+                  {parcial && (
+                    <div className="planta-ev">
+                      <div className="planta-ev-track">
+                        <div
+                          className="planta-ev-fill"
+                          style={{ width: (ev.cuanto / ev.meta) * 100 + "%" }}
+                        />
+                      </div>
+                      <span className="planta-ev-lbl">
+                        {ev.cuanto} / {ev.meta}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </button>
 
@@ -66,44 +104,28 @@ export default function Obra({ state, update, goTo }) {
                   <p className="body-p" style={{ marginBottom: 14 }}>
                     {p.descripcion}
                   </p>
-                  <div
-                    style={{
-                      fontSize: 13,
-                      color: "var(--goldb)",
-                      fontWeight: 600,
-                      marginBottom: 14,
-                    }}
-                  >
-                    Resultado: {p.resultado}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      letterSpacing: 1,
-                      textTransform: "uppercase",
-                      color: "var(--dim)",
-                      fontWeight: 700,
-                      marginBottom: 10,
-                    }}
-                  >
-                    Evidencia para levantar la planta
+                  <div className="planta-res">Resultado: {p.resultado}</div>
+                  <div className="planta-ev-head">
+                    {isDone ? "Planta levantada" : "Como se levanta"}
                   </div>
                   <p className="body-p" style={{ marginBottom: 14 }}>
-                    {p.evidencia}
+                    {isDone ? p.evidencia : ev.comoV}
                   </p>
-                  <button
-                    className={isDone ? "btn btn-s" : "btn btn-g"}
-                    onClick={() => toggleEvidencia(p.n)}
-                  >
-                    {isDone ? "Marcar como pendiente" : "Levantar esta planta"}
-                  </button>
+                  {!isDone && (
+                    <button
+                      className="btn btn-g"
+                      onClick={() => irAPorEvidencia(p)}
+                    >
+                      Ir a construirla
+                    </button>
+                  )}
                 </div>
               )}
             </div>
           );
         })}
       </div>
-      <div className="obra-base">Cimientos · Punto de partida</div>
+      <div className="obra-base">Cimientos &middot; Punto de partida</div>
 
       <div className="divider" />
       <div className="card">
@@ -114,7 +136,9 @@ export default function Obra({ state, update, goTo }) {
             style={{
               padding: "12px 0",
               borderBottom:
-                i < FASES.length - 1 ? "1px solid rgba(255,255,255,.06)" : "none",
+                i < FASES.length - 1
+                  ? "1px solid rgba(255,255,255,.06)"
+                  : "none",
             }}
           >
             <div
@@ -134,7 +158,7 @@ export default function Obra({ state, update, goTo }) {
                   fontFamily: "var(--sn)",
                 }}
               >
-                · {f.dias}
+                &middot; {f.dias}
               </span>
             </div>
             <div style={{ fontSize: 14, color: "var(--dim)", marginTop: 3 }}>
@@ -145,7 +169,7 @@ export default function Obra({ state, update, goTo }) {
       </div>
 
       <p className="foot-note">
-        {T.marca} · {T.autor}
+        {T.marca} &middot; {T.autor}
       </p>
     </div>
   );

@@ -4,19 +4,49 @@ import { useState } from "react";
 import { T } from "../lib/textos";
 import { VOZ_MAESTRO, EJE, MARCA } from "../lib/programa";
 
-export default function Plano({ state, update }) {
-  const anioBase = new Date().getFullYear();
-  const HITOS = [3, 6, 9, 12];
+// ============================================================
+// EL PLANO v3 - El blueprint de la decada de oro.
+// De formulario a activo central: la linea de tiempo real de
+// los 10 anos (segun la edad), el contraste castillo -> reino,
+// y estetica de documento de arquitecto (descargable).
+// ============================================================
 
+const TRAMOS = [
+  { clave: "50-54", base: 52, label: "50 a 54" },
+  { clave: "55-59", base: 57, label: "55 a 59" },
+  { clave: "60-65", base: 62, label: "60 a 65" },
+];
+
+export default function Plano({ state, update }) {
   const p = state.plano || {};
   const [proyecto, setProyecto] = useState(p.proyecto || "");
   const [desde, setDesde] = useState(p.desde || "");
+  const [tramo, setTramo] = useState(p.tramo || "");
+  const [castillo, setCastillo] = useState(p.castillo || "");
+  const [reino, setReino] = useState(p.reino || "");
   const [hitos, setHitos] = useState(p.hitos || {});
   const [movs, setMovs] = useState(p.movimientos || {});
   const [editando, setEditando] = useState(!p.proyecto);
 
+  // La decada de oro arranca en la edad base del tramo elegido.
+  const edadBase = (TRAMOS.find((t) => t.clave === (tramo || p.tramo)) || {})
+    .base;
+  const anioActual = new Date().getFullYear();
+  // 4 marcas dentro de la decada: +1, +3, +6, +10 anos.
+  const MARCAS = [1, 3, 6, 10];
+
   function guardar() {
-    update({ plano: { proyecto, desde, hitos, movimientos: movs } });
+    update({
+      plano: {
+        proyecto,
+        desde,
+        tramo,
+        castillo,
+        reino,
+        hitos,
+        movimientos: movs,
+      },
+    });
     setEditando(false);
   }
 
@@ -31,10 +61,16 @@ export default function Plano({ state, update }) {
 
   return (
     <div className="screen">
-      <div className="eyebrow">{T.plano.titulo}</div>
-      <h1 className="screen-title">
-        Lo que vienes <em>posponiendo</em>
-      </h1>
+      {/* Encabezado tipo documento de arquitecto */}
+      <div className="plano-doc-head">
+        <div>
+          <div className="eyebrow">{T.plano.titulo}</div>
+          <h1 className="screen-title" style={{ marginBottom: 6 }}>
+            El plano de tu <em>decada de oro</em>
+          </h1>
+        </div>
+        <div className="plano-sello">SA</div>
+      </div>
       <p className="screen-sub">{T.plano.sub}</p>
 
       {/* Premisa */}
@@ -89,16 +125,131 @@ export default function Plano({ state, update }) {
         </div>
       )}
 
+      {/* CASTILLO -> REINO (la distincion visual) */}
+      <div className="card">
+        <div className="chip">Castillo y reino</div>
+        <p className="body-p" style={{ marginBottom: 18 }}>
+          El castillo es lo que construiste y se ve desde afuera. El reino es la
+          vida que de verdad habitas. No siempre coinciden.
+        </p>
+        <div className="cr-grid">
+          <div className="cr-col cr-castillo">
+            <div className="cr-label">El castillo que ya tienes</div>
+            {editando ? (
+              <textarea
+                className="textarea cr-ta"
+                value={castillo}
+                placeholder="Lo construido: empresa, patrimonio, cargo, reconocimiento..."
+                onChange={(e) => setCastillo(e.target.value)}
+              />
+            ) : (
+              <p className="cr-text">
+                {p.castillo || (
+                  <span className="cr-empty">Sin definir</span>
+                )}
+              </p>
+            )}
+          </div>
+          <div className="cr-arrow">&rarr;</div>
+          <div className="cr-col cr-reino">
+            <div className="cr-label">El reino que quieres habitar</div>
+            {editando ? (
+              <textarea
+                className="textarea cr-ta"
+                value={reino}
+                placeholder="La vida que quieres vivir de verdad, no solo tener..."
+                onChange={(e) => setReino(e.target.value)}
+              />
+            ) : (
+              <p className="cr-text">
+                {p.reino || <span className="cr-empty">Sin definir</span>}
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* TU PUNTO DE PARTIDA (edad -> ancla la decada) */}
+      <div className="card">
+        <div className="chip">{T.plano.edadTitulo}</div>
+        {editando ? (
+          <>
+            <label className="field-label">{T.plano.edadLabel}</label>
+            <div className="tramo-row">
+              {TRAMOS.map((tr) => (
+                <button
+                  key={tr.clave}
+                  className={"tramo-btn" + (tramo === tr.clave ? " sel" : "")}
+                  onClick={() => setTramo(tr.clave)}
+                >
+                  {tr.label}
+                </button>
+              ))}
+            </div>
+          </>
+        ) : (
+          p.tramo && (
+            <p className="body-p">
+              Tu decada de oro corre entre los{" "}
+              <strong>
+                {(TRAMOS.find((t) => t.clave === p.tramo) || {}).label} anos
+              </strong>
+              . Son estos 10 anos, no otros.
+            </p>
+          )
+        )}
+      </div>
+
+      {/* LA DECADA DE ORO - linea de tiempo real */}
+      {(tramo || p.tramo) && edadBase && (
+        <div className="card card-gold">
+          <div className="chip">{T.plano.hitosTitulo}</div>
+          <p className="body-p" style={{ marginBottom: 6 }}>
+            {T.plano.hitosSub}
+          </p>
+          <div className="decada-line">
+            {MARCAS.map((off, i) => (
+              <div key={off} className="decada-hito">
+                <div className="decada-nodo">
+                  <span className="decada-dot" />
+                  {i < MARCAS.length - 1 && <span className="decada-bar" />}
+                </div>
+                <div className="decada-body">
+                  <div className="decada-edad">
+                    {edadBase + off} anos &middot; {anioActual + off}
+                  </div>
+                  {editando ? (
+                    <input
+                      className="input"
+                      value={hitos[off] || ""}
+                      placeholder="Que quieres que exista para esta edad..."
+                      onChange={(e) =>
+                        setHitos({ ...hitos, [off]: e.target.value })
+                      }
+                    />
+                  ) : (
+                    <p className="body-p">
+                      {(p.hitos || {})[off] || (
+                        <span className="cr-empty">Sin definir</span>
+                      )}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* LOS 3 MOVIMIENTOS (de algun dia a una fecha) */}
-      <div className="card card-gold">
+      <div className="card">
         <div className="chip">{T.plano.movimientosTitulo}</div>
         {T.plano.movLabels.map((lbl, i) => (
           <div
             key={i}
             style={{
               padding: "14px 0",
-              borderBottom:
-                i < 2 ? "1px solid rgba(255,255,255,.06)" : "none",
+              borderBottom: i < 2 ? "1px solid rgba(255,255,255,.06)" : "none",
             }}
           >
             <div
@@ -123,54 +274,7 @@ export default function Plano({ state, update }) {
             ) : (
               <p className="body-p">
                 {(p.movimientos || {})[i] || (
-                  <span style={{ color: "var(--dim)", fontStyle: "italic" }}>
-                    Sin definir
-                  </span>
-                )}
-              </p>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* LOS 12 ANOS */}
-      <div className="card">
-        <div className="chip">{T.plano.hitosTitulo}</div>
-        {HITOS.map((off) => (
-          <div
-            key={off}
-            style={{
-              padding: "14px 0",
-              borderBottom:
-                off < 12 ? "1px solid rgba(255,255,255,.06)" : "none",
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "var(--sf)",
-                fontSize: 14,
-                color: "var(--goldb)",
-                fontWeight: 700,
-                letterSpacing: 1,
-                textTransform: "uppercase",
-                marginBottom: 8,
-              }}
-            >
-              +{off} anos · {anioBase + off}
-            </div>
-            {editando ? (
-              <input
-                className="input"
-                value={hitos[off] || ""}
-                placeholder="Que quieres que exista para esta fecha..."
-                onChange={(e) => setHitos({ ...hitos, [off]: e.target.value })}
-              />
-            ) : (
-              <p className="body-p">
-                {(p.hitos || {})[off] || (
-                  <span style={{ color: "var(--dim)", fontStyle: "italic" }}>
-                    Sin definir
-                  </span>
+                  <span className="cr-empty">Sin definir</span>
                 )}
               </p>
             )}
@@ -193,7 +297,7 @@ export default function Plano({ state, update }) {
       )}
 
       <p className="foot-note">
-        {T.marca} · {T.autor}
+        {MARCA.metodo} &middot; {MARCA.autor}
       </p>
     </div>
   );
