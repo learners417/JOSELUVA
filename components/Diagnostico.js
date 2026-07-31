@@ -100,12 +100,28 @@ export default function Diagnostico({ clave, state, update, onClose }) {
           <>
             <div className="eyebrow">Lo que escucho</div>
             <div className="diag-score">
-              <div className="diag-score-ring">
-                <span>{resultado.score}</span>
+              <div className="diag-ring-wrap">
+                <svg viewBox="0 0 120 120" className="diag-ring-svg">
+                  <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(207,176,83,0.12)" strokeWidth="6" />
+                  <circle
+                    cx="60" cy="60" r="52" fill="none"
+                    stroke="url(#ringfoil)" strokeWidth="6" strokeLinecap="round"
+                    strokeDasharray={2 * Math.PI * 52}
+                    strokeDashoffset={2 * Math.PI * 52 * (1 - resultado.score / 100)}
+                    transform="rotate(-90 60 60)"
+                    style={{ transition: "stroke-dashoffset 1.1s cubic-bezier(0.22,1,0.36,1)" }}
+                  />
+                  <defs>
+                    <linearGradient id="ringfoil" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#B8963F" />
+                      <stop offset="50%" stopColor="#E8D4A0" />
+                      <stop offset="100%" stopColor="#CFB053" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <span className="diag-ring-n">{resultado.score}</span>
               </div>
-              <div className="diag-score-lbl">
-                Indice de alineacion
-              </div>
+              <div className="diag-score-lbl">Índice de alineación</div>
             </div>
             <h2 className="diag-res-titulo">{resultado.informe.titulo}</h2>
             <p className="diag-res-texto">{resultado.informe.texto}</p>

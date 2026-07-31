@@ -3,41 +3,9 @@
 App del Método **Serena Ambición** de José Luis Valle Tulián (*José Luva*).
 *Del éxito al sentido.*
 
-**Avatar:** empresarios y profesionales de 50-65 con éxito consolidado y un proyecto vital postergado. No se auto-perciben "en crisis" — buyer personas: Ricardo (54), Marcela (51), Jorge (58).
+**Avatar:** Empresarios y profesionales +50 con un **proyecto vital postergado**.
 
-Next.js 14 (App Router) · PWA instalable · IA (VALLE) vía proxy seguro sin API key en el cliente · sync opcional a Supabase.
-
----
-
-## Estado: 10 cirugías completadas y certificadas
-
-`python3 auditoria.py` → **18 OK / 0 FAIL**. Build de producción limpio (exit 0).
-
-1. **Cerebro del avatar + léxico blindado** — `lib/avatar.js` (los 3 dolores con voz real, buyer personas) y `lib/lexico.js` (palabras prohibidas vetadas por código: "propósito" nunca aparece).
-2. **Onboarding quirúrgico** — retrata en vez de preguntar: la persona se reconoce en las voces de los reels y recibe el reencuadre de José ("no es crisis, es diseño").
-3. **El Plano** — de formulario a blueprint de la década de oro, con castillo→reino y línea de tiempo real según la edad.
-4. **VALLE, Master Coach de bolsillo** — memoria persistente, 3 modos (profundizar / conversación ausente / ensayo), contexto rico (dolores, plano, diagnósticos), blindaje anti-manipulación y derivación a profesional.
-5. **La Obra por evidencia** — las 8 plantas se levantan con evidencia real (proyecto escrito, elecciones, días de ritual, diagnósticos), no con un click. Celebración medida.
-6. **6 diagnósticos IA nativos** — corren dentro de la app, guardan resultado, VALLE los conoce y levantan las plantas. Un solo motor (`components/Diagnostico.js`) los corre a todos.
-7. **El Alto + ritual del sofisticado** — regulación (no wellness): respiración guiada real, conexión al diagnóstico Copiloto, y el ritual conectado a los hitos de La Obra.
-8. **Supabase + multi-dispositivo + Guardado visible** — sync opcional por import dinámico (no infla el bundle), hidratación por código, indicador "· Guardado ✓".
-9. **La Mesa + la escalera** — La Mesa con presencia real (el círculo de pares) y el mapa del camino (Entrevista → 90 días → La Mesa), sin precios (se revelan en la conversación 1-a-1).
-10. **Auditoría final** — `auditoria.py` certifica las 10 por exit code; linter de léxico en verde; sin contaminación de otros clientes.
-
-### Activar el sync multi-dispositivo (opcional)
-
-La app funciona 100% local sin configurar nada. Para que el progreso funcione en cualquier teléfono:
-
-1. Crear un proyecto en Supabase y esta tabla:
-   ```sql
-   create table progreso (
-     codigo text primary key,
-     estado jsonb,
-     updated_at timestamptz default now()
-   );
-   ```
-2. En Vercel, agregar las variables `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` (ver `.env.example`).
-3. Redeploy. Listo — sin tocar código.
+Next.js 14 (App Router) · PWA instalable · IA (VALLE) vía proxy seguro sin API key en el cliente.
 
 ---
 

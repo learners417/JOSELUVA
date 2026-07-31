@@ -83,12 +83,13 @@ export default function AppShell({ state, update, onReset }) {
       )}
       {tab === "obra" && <Obra state={state} update={update} goTo={setTab} />}
       {tab === "plano" && <Plano state={state} update={update} />}
-      {tab === "valle" && <Valle state={state} update={update} />}
-      {tab === "alto" && <Alto state={state} update={update} />}
-      {tab === "instrumentos" && <Instrumentos state={state} update={update} />}
+      {tab === "valle" && <Valle nombre={nombre} proyecto={proyecto} />}
+      {tab === "alto" && <Alto />}
+      {tab === "instrumentos" && <Instrumentos />}
       {tab === "mas" && <Mas goTo={setTab} />}
+      {tab === "instrumentos" && <Instrumentos />}
       {tab === "mesa" && <Mesa />}
-      {tab === "agenda" && <Agenda state={state} />}
+      {tab === "agenda" && <Agenda />}
       {tab === "historia" && <Historia />}
 
       <nav className="bottomnav">

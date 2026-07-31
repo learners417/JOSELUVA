@@ -158,34 +158,7 @@ export default function Ritual({ state, update, onReset }) {
             )}
           </>
         ) : (
-          <>
-            <p className="mirror">{T.ritual.hecho}</p>
-            {(() => {
-              const nElec = (state.elecciones || []).length;
-              const nDias = (state.ritualDias || []).length;
-              if (nElec < 5)
-                return (
-                  <p className="ritual-hito">
-                    {5 - nElec}{" "}
-                    {5 - nElec === 1 ? "eleccion mas" : "elecciones mas"} para
-                    levantar la planta 4 (Optar vs. elegir).
-                  </p>
-                );
-              if (nDias < 21)
-                return (
-                  <p className="ritual-hito">
-                    Dia {nDias} de 21. La planta 8 (Autonomia) se levanta al
-                    llegar.
-                  </p>
-                );
-              return (
-                <p className="ritual-hito">
-                  Sostuviste el ritual mas de 21 dias. La obra ya no depende de
-                  nadie mas que de ti.
-                </p>
-              );
-            })()}
-          </>
+          <p className="mirror">{T.ritual.hecho}</p>
         )}
       </div>
 
