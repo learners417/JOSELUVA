@@ -4,6 +4,7 @@ import { useState } from "react";
 import { T } from "../lib/textos";
 
 import Ritual from "./Ritual";
+import Camino from "./Camino";
 import Obra from "./Obra";
 import Plano from "./Plano";
 import Valle from "./Valle";
@@ -15,9 +16,9 @@ import Mas from "./Mas";
 import Historia from "./Historia";
 
 const NAV = [
-  { key: "hoy", lbl: T.nav.inicio, ico: "sun" },
+  { key: "hoy", lbl: "Camino", ico: "map" },
   { key: "obra", lbl: T.nav.obra, ico: "building" },
-  { key: "plano", lbl: T.nav.plano, ico: "map" },
+  { key: "ritual", lbl: "Hoy", ico: "sun" },
   { key: "valle", lbl: T.nav.valle, ico: "chat" },
   { key: "alto", lbl: T.nav.alto, ico: "pause" },
   { key: "mas", lbl: "Mas", ico: "grid" },
@@ -79,17 +80,19 @@ export default function AppShell({ state, update, onReset }) {
   return (
     <div className="app-root">
       {tab === "hoy" && (
+        <Camino state={state} update={update} goTo={setTab} />
+      )}
+      {tab === "ritual" && (
         <Ritual state={state} update={update} onReset={onReset} goTo={setTab} />
       )}
       {tab === "obra" && <Obra state={state} update={update} goTo={setTab} />}
       {tab === "plano" && <Plano state={state} update={update} />}
-      {tab === "valle" && <Valle nombre={nombre} proyecto={proyecto} />}
-      {tab === "alto" && <Alto />}
-      {tab === "instrumentos" && <Instrumentos />}
+      {tab === "valle" && <Valle state={state} update={update} />}
+      {tab === "alto" && <Alto state={state} update={update} />}
+      {tab === "instrumentos" && <Instrumentos state={state} update={update} />}
       {tab === "mas" && <Mas goTo={setTab} />}
-      {tab === "instrumentos" && <Instrumentos />}
       {tab === "mesa" && <Mesa />}
-      {tab === "agenda" && <Agenda />}
+      {tab === "agenda" && <Agenda state={state} />}
       {tab === "historia" && <Historia />}
 
       <nav className="bottomnav">
