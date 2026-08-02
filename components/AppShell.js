@@ -5,6 +5,9 @@ import { T } from "../lib/textos";
 
 import Ritual from "./Ritual";
 import Camino from "./Camino";
+import RuedaVida from "./RuedaVida";
+import Diario from "./Diario";
+import PlanServicio from "./PlanServicio";
 import Obra from "./Obra";
 import Plano from "./Plano";
 import Valle from "./Valle";
@@ -17,8 +20,8 @@ import Historia from "./Historia";
 
 const NAV = [
   { key: "hoy", lbl: "Camino", ico: "map" },
-  { key: "obra", lbl: T.nav.obra, ico: "building" },
-  { key: "ritual", lbl: "Hoy", ico: "sun" },
+  { key: "rueda", lbl: "Rueda", ico: "sun" },
+  { key: "diario", lbl: "Bitácora", ico: "building" },
   { key: "valle", lbl: T.nav.valle, ico: "chat" },
   { key: "alto", lbl: T.nav.alto, ico: "pause" },
   { key: "mas", lbl: "Mas", ico: "grid" },
@@ -79,9 +82,10 @@ export default function AppShell({ state, update, onReset }) {
 
   return (
     <div className="app-root">
-      {tab === "hoy" && (
-        <Camino state={state} update={update} goTo={setTab} />
-      )}
+      {tab === "hoy" && <Camino state={state} update={update} />}
+      {tab === "rueda" && <RuedaVida state={state} update={update} />}
+      {tab === "diario" && <Diario state={state} update={update} />}
+      {tab === "plan" && <PlanServicio state={state} update={update} />}
       {tab === "ritual" && (
         <Ritual state={state} update={update} onReset={onReset} goTo={setTab} />
       )}

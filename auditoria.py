@@ -77,10 +77,10 @@ check("T1 avatar.js (3 dolores + personas)",
 check("T1 lexico.js (revisor + saneador)",
       "revisarLexico" in lx and "sanearLexico" in lx and "PROHIBIDAS" in lx)
 
-# ---------- TURNO 2: onboarding quirurgico ----------
+# ---------- TURNO 2: onboarding alineado al curso ----------
 ob = leer("components/Onboarding.js") or ""
-check("T2 onboarding (espejo por voces, no test)",
-      "voz-card" in ob and "reencuadre" in ob and "VOZ_MAESTRO" in ob)
+check("T2 onboarding (nombre + sueno, entrada al camino)",
+      "sueno" in ob and "Doce semanas" in ob and "diseñar" in ob)
 
 # ---------- TURNO 3: El Plano - decada de oro ----------
 pl = leer("components/Plano.js") or ""

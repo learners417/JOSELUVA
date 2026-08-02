@@ -1,59 +1,42 @@
 "use client";
 
 import { useState } from "react";
-import { T } from "../lib/textos";
-import { VOZ_MAESTRO } from "../lib/programa";
-import { DOLORES, PERSONAS } from "../lib/avatar";
 
 // ============================================================
-// ONBOARDING v3 - La Entrevista de Expansion en miniatura.
-// No es un test: es la primera conversacion. Entra por el
-// lenguaje que la persona YA usa (los 3 dolores con voz de reel),
-// deja marcar las que resuenan, y devuelve un ESPEJO quirurgico
-// con el reencuadre de Jose (no es crisis: es diseno).
+// ONBOARDING - la entrada al camino. Sobrio, editorial.
+// No es un test: es el primer trazo. Pide el nombre y el sueno
+// que trae, y abre las doce semanas. Alineado al curso real.
 // ============================================================
 
 export default function Onboarding({ onDone }) {
   const [step, setStep] = useState(0);
   const [nombre, setNombre] = useState("");
-  const [marcados, setMarcados] = useState([]); // claves de DOLORES que resuenan
-
-  function toggle(clave) {
-    setMarcados((prev) =>
-      prev.includes(clave) ? prev.filter((c) => c !== clave) : [...prev, clave]
-    );
-  }
-
-  // El dolor dominante = el primero que marco (o el de mas peso si marco varios).
-  const dominante = marcados.length ? marcados[0] : null;
-  const dolorDominante = DOLORES.find((d) => d.clave === dominante) || null;
+  const [sueno, setSueno] = useState("");
 
   function finish() {
     onDone({
       nombre: nombre.trim(),
-      dolor: dominante,
-      dolores: marcados,
-      irv: null,
+      sueno: sueno.trim(),
       ts: Date.now(),
     });
   }
 
   return (
-    <div className="screen" style={{ paddingTop: 44 }}>
-      {/* PASO 0 - Apertura sobria + nombre */}
+    <div className="screen" style={{ paddingTop: 56 }}>
+      {/* PASO 0 - Bienvenida + nombre */}
       {step === 0 && (
         <>
-          <div className="eyebrow">La Entrevista de Expansion</div>
+          <div className="eyebrow">Serena Ambición</div>
           <h1 className="screen-title">
-            Antes de construir,<br />
-            una <em>conversacion</em>.
+            Antes de empezar,<br />
+            una <em>conversación</em>.
           </h1>
           <p className="screen-sub">
-            Esto no es un test. Nadie corrige nada. Es el primer trazo de tu
-            plano, y empieza por tu nombre.
+            Este no es un curso más para mirar. Es un camino para recorrer. Y
+            todo camino empieza por saber quién lo anda.
           </p>
           <div className="card">
-            <label className="field-label">Como te llamas</label>
+            <label className="field-label">Cómo te llamas</label>
             <input
               className="input"
               type="text"
@@ -67,7 +50,7 @@ export default function Onboarding({ onDone }) {
             />
             <button
               className="btn btn-g"
-              style={{ marginTop: 16 }}
+              style={{ marginTop: 20 }}
               onClick={() => setStep(1)}
               disabled={nombre.trim().length < 2}
             >
@@ -77,84 +60,73 @@ export default function Onboarding({ onDone }) {
         </>
       )}
 
-      {/* PASO 1 - Entrada por su lenguaje (las 3 voces de los reels) */}
+      {/* PASO 1 - El sueno que trae */}
       {step === 1 && (
         <>
-          <div className="eyebrow">Paso 1 de 2</div>
+          <div className="eyebrow">Paso 1</div>
           <h1 className="screen-title">
-            {nombre.split(" ")[0]}, léelas sin apuro.
+            {nombre.split(" ")[0]}, ¿qué viniste a <em>diseñar</em>?
           </h1>
           <p className="screen-sub">
-            Marca las que reconoces. Puede ser una, pueden ser las tres. No hay
-            respuesta correcta: hay la tuya.
+            No hace falta que sea perfecto ni definitivo. Solo eso que hace
+            tiempo dejaste para "algún día". Escríbelo como se lo dirías a
+            alguien de confianza.
           </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {DOLORES.map((d) => {
-              const on = marcados.includes(d.clave);
-              return (
-                <button
-                  key={d.clave}
-                  className={"voz-card" + (on ? " voz-on" : "")}
-                  onClick={() => toggle(d.clave)}
-                >
-                  <span className="voz-mark">{on ? "\u2713" : ""}</span>
-                  <span className="voz-text">"{d.voz}"</span>
-                </button>
-              );
-            })}
+          <div className="card">
+            <label className="field-label">Tu proyecto pendiente</label>
+            <textarea
+              className="textarea"
+              value={sueno}
+              placeholder="Eso que vengo posponiendo..."
+              onChange={(e) => setSueno(e.target.value)}
+              style={{ minHeight: 110 }}
+              autoFocus
+            />
+            <button
+              className="btn btn-g"
+              style={{ marginTop: 20 }}
+              onClick={() => setStep(2)}
+              disabled={sueno.trim().length < 4}
+            >
+              Continuar
+            </button>
+            <button
+              className="btn-ghost"
+              style={{ marginTop: 12 }}
+              onClick={() => setStep(2)}
+            >
+              Todavía no lo tengo claro
+            </button>
           </div>
-          <button
-            className="btn btn-g"
-            style={{ marginTop: 20 }}
-            onClick={() => setStep(2)}
-            disabled={marcados.length === 0}
-          >
-            Ver lo que esto dice de mi
-          </button>
         </>
       )}
 
-      {/* PASO 2 - EL ESPEJO QUIRURGICO + VOZ MAESTRO */}
-      {step === 2 && dolorDominante && (
+      {/* PASO 2 - El pacto de entrada */}
+      {step === 2 && (
         <>
-          <div className="eyebrow">Lo que escucho</div>
+          <div className="eyebrow">El camino</div>
           <h1 className="screen-title">
-            {nombre.split(" ")[0]}, esto no es{" "}
-            <em>lo que crees que es.</em>
+            Doce semanas para <em>volver a ser autor</em>.
           </h1>
-
-          {/* El reencuadre del dolor dominante - la voz de arquitecto */}
           <div className="card card-gold">
-            <p className="mirror">{dolorDominante.reencuadre}</p>
-          </div>
-
-          {/* Si marco mas de uno, nombrar el patron sin patologizar */}
-          {marcados.length > 1 && (
-            <p
-              className="screen-sub"
-              style={{ marginTop: 18, marginBottom: 0 }}
-            >
-              Marcaste {marcados.length === 3 ? "las tres" : "mas de una"}. No
-              son tres problemas distintos: son el mismo mecanismo mirado desde
-              tres ventanas. Eso, en realidad, simplifica el trabajo.
+            <p className="mirror">
+              {sueno
+                ? "Lo que anotaste no es un problema a resolver. Es un proyecto a diseñar. Y en estas doce semanas vas a construir las habilidades internas para sostenerlo."
+                : "Aunque hoy no tengas claro tu sueño, estas doce semanas son para encontrarlo, y para construir lo necesario para sostenerlo cuando aparezca."}
             </p>
-          )}
-
-          {/* VOZ MAESTRO - Jose en primera persona */}
-          <div className="card" style={{ marginTop: 18 }}>
-            <div className="chip">Jose Luis</div>
-            <p className="mirror">{VOZ_MAESTRO.bienvenida}</p>
           </div>
-
-          <button className="btn btn-g" onClick={finish}>
-            Entrar a mi obra
-          </button>
+          <p className="body-p" style={{ margin: "24px 0 8px" }}>
+            No vas a hacerlo solo. Cada semana trabaja una capa: el cuerpo, el
+            diseño, la presencia, el cambio, las conversaciones que faltan. Todo
+            apunta a lo mismo: que salgas con la forma de ver y de decidir que
+            este momento de tu vida te pide.
+          </p>
           <button
-            className="btn-ghost"
-            style={{ marginTop: 10 }}
-            onClick={() => setStep(1)}
+            className="btn btn-g"
+            style={{ marginTop: 24 }}
+            onClick={finish}
           >
-            Volver
+            Empezar el camino
           </button>
         </>
       )}

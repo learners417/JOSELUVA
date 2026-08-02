@@ -5,26 +5,29 @@ import { MARCA } from "../lib/programa";
 
 const ITEMS = [
   {
-    key: "historia",
-    nombre: "Por que existe este metodo",
-    desc: "La historia de Jose Luis, en sus palabras.",
+    key: "plan",
+    nombre: "Ruta del Plan de Servicio",
+    desc: "El puente entre lo que trabajas y lo que dejas en el mundo.",
   },
   {
-    key: "instrumentos",
-    nombre: "Instrumentos",
-    desc: "Las 9 herramientas de medicion del metodo.",
+    key: "alto",
+    nombre: "El Alto",
+    desc: "Regulación y presencia. Volver de la inercia a la elección.",
+  },
+  {
+    key: "historia",
+    nombre: "Por qué existe este método",
+    desc: "La historia de José Luis, en sus palabras.",
   },
   {
     key: "agenda",
-    nombre: "Entrevista de Expansion",
-    desc: "45 minutos con Jose Luis. Sin costo.",
-  },
-  {
-    key: "mesa",
-    nombre: "La Mesa",
-    desc: "La comunidad de pares. Proximamente.",
+    nombre: "Entrevista de Expansión",
+    desc: "45 minutos con José Luis. Sin costo.",
   },
 ];
+
+const FOTO_JOSE =
+  "https://assets.cdn.filesafe.space/m0oQv3eLz3Ewj8PeqgqY/media/67be22d3d5a8ef69127c6b6c.png";
 
 export default function Mas({ goTo }) {
   return (
@@ -34,6 +37,15 @@ export default function Mas({ goTo }) {
         Todo lo <em>demas</em>
       </h1>
       <p className="screen-sub">{MARCA.avatar}</p>
+
+      {/* Jose Luis - cara humana, credencial */}
+      <div className="jose-card">
+        <img className="jose-foto" src={FOTO_JOSE} alt="Jose Luis Valle Tulian" />
+        <div className="jose-info">
+          <div className="jose-nombre">Jose Luis Valle Tulian</div>
+          <div className="jose-cred">Master Certified Coach · ICF</div>
+        </div>
+      </div>
 
       {ITEMS.map((i) => (
         <button

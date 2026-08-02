@@ -22,10 +22,9 @@ export default function Edificio({ plantas = 0, total = 8 }) {
       aria-hidden="true"
     >
       <defs>
-        <linearGradient id="foil" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#B8963F" />
-          <stop offset="50%" stopColor="#E8D4A0" />
-          <stop offset="100%" stopColor="#CFB053" />
+        <linearGradient id="foil" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#CFB053" />
+          <stop offset="100%" stopColor="#9A8340" />
         </linearGradient>
         <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
           <feGaussianBlur stdDeviation="3" result="b" />
@@ -38,7 +37,7 @@ export default function Edificio({ plantas = 0, total = 8 }) {
 
       {/* suelo / cimientos */}
       <line x1="30" y1="292" x2="190" y2="292" stroke="#CFB053" strokeWidth="1.5" opacity="0.5" />
-      <text x="110" y="308" textAnchor="middle" fill="#6B6F78" fontSize="9" letterSpacing="2" fontFamily="Inter, sans-serif">CIMIENTOS</text>
+      <text x="110" y="308" textAnchor="middle" fill="#6B6F78" fontSize="12" letterSpacing="2" fontFamily="Inter, sans-serif">CIMIENTOS</text>
 
       {/* 8 plantas de abajo hacia arriba */}
       {Array.from({ length: total }).map((_, i) => {
@@ -63,7 +62,7 @@ export default function Edificio({ plantas = 0, total = 8 }) {
               strokeWidth={esActual ? "1.6" : "1"}
               strokeDasharray={esActual ? "3 3" : "0"}
               opacity={levantada ? 1 : esActual ? 0.9 : 0.4}
-              filter={levantada ? "url(#glow)" : "none"}
+              
             />
             {/* ventanas de la planta levantada */}
             {levantada &&
@@ -85,7 +84,7 @@ export default function Edificio({ plantas = 0, total = 8 }) {
               y={y + 18}
               textAnchor="end"
               fill={levantada ? "#E8D4A0" : "#6B6F78"}
-              fontSize="10"
+              fontSize="12"
               fontFamily="Libre Baskerville, serif"
             >
               {i + 1}
@@ -96,7 +95,7 @@ export default function Edificio({ plantas = 0, total = 8 }) {
 
       {/* remate / bandera dorada cuando esta completo */}
       {plantas >= total && (
-        <g filter="url(#glow)">
+        <g>
           <line x1="110" y1="52" x2="110" y2="34" stroke="#E8D4A0" strokeWidth="1.5" />
           <path d="M110 34 L128 40 L110 46 Z" fill="url(#foil)" />
         </g>

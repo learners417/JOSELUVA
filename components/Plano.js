@@ -254,7 +254,7 @@ export default function Plano({ state, update }) {
           >
             <div
               style={{
-                fontSize: 11,
+                fontSize: 12,
                 letterSpacing: 2,
                 textTransform: "uppercase",
                 color: "var(--goldb)",
