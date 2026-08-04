@@ -542,3 +542,51 @@ select.input { appearance: none; -webkit-appearance: none; background-image: url
 .jose-info { min-width: 0; }
 .jose-nombre { font-family: var(--sf); font-size: 20px; font-weight: 600; color: var(--cream); line-height: 1.15; }
 .jose-cred { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-top: 4px; }
+
+/* ============ HOY - la pantalla guía ============ */
+.hoy-sub-titulo { font-family: var(--sf); font-style: italic; color: var(--gold-lt); font-weight: 500; }
+.paso-card { background: var(--navy); border: 1px solid var(--goldd); border-radius: var(--rad); padding: 30px 26px; margin-bottom: 28px; }
+.paso-card.paso-rueda { border-color: var(--gold); }
+.paso-lbl { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 14px; }
+.paso-titulo { font-family: var(--sf); font-size: 27px; font-weight: 600; color: var(--cream); line-height: 1.15; margin-bottom: 14px; }
+.paso-detalle { font-size: 16px; color: var(--dim); line-height: 1.7; margin-bottom: 24px; font-weight: 300; }
+.paso-card .btn { gap: 10px; }
+.paso-listo { border-color: var(--goldd); background: linear-gradient(180deg, rgba(207,176,83,0.04), var(--navy)); }
+
+/* El sueño como norte */
+.hoy-sueno { border-left: 2px solid var(--gold); padding: 2px 0 2px 20px; margin-bottom: 30px; }
+.hoy-sueno-lbl { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); font-weight: 600; display: block; margin-bottom: 8px; }
+.hoy-sueno-texto { font-family: var(--sf); font-size: 20px; font-style: italic; color: var(--cream); line-height: 1.4; font-weight: 500; }
+
+/* El avance - el edificio como acceso al mapa */
+.hoy-avance { display: flex; align-items: center; gap: 20px; padding: 22px; border: 1px solid var(--border-soft); border-radius: var(--rad); cursor: pointer; transition: all 0.3s; }
+.hoy-avance:hover { border-color: var(--goldd); }
+.hoy-avance svg { max-width: 90px; }
+.hoy-avance-info { flex: 1; }
+.hoy-avance-n { font-family: var(--sf); font-size: 26px; font-weight: 600; color: var(--gold-lt); display: block; line-height: 1.1; }
+.hoy-avance-de { font-family: var(--sn); font-size: 13px; color: var(--dim); font-weight: 300; letter-spacing: 0.5px; }
+.hoy-avance-link { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-top: 10px; }
+
+/* ============ EL CAMINO - mapa con bloqueo ============ */
+.mapa-semanas { display: flex; flex-direction: column; }
+.mapa-semana { border-bottom: 1px solid var(--border-soft); }
+.mapa-head { display: flex; align-items: center; gap: 16px; width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 20px 4px; }
+.mapa-head:disabled { cursor: not-allowed; }
+.mapa-n { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--sf); font-size: 16px; font-weight: 600; border: 1px solid var(--border-soft); color: var(--dim); flex-shrink: 0; transition: all 0.3s; }
+.mapa-body { flex: 1; min-width: 0; }
+.mapa-titulo { font-family: var(--sf); font-size: 19px; font-weight: 600; color: var(--text); line-height: 1.1; }
+.mapa-subt { font-size: 13px; color: var(--faint); margin-top: 3px; letter-spacing: 0.3px; }
+.mapa-tag { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); font-weight: 600; border: 1px solid var(--goldd); border-radius: 2px; padding: 3px 8px; flex-shrink: 0; }
+.mapa-aqui { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--midnight); background: var(--gold); font-weight: 600; border-radius: 2px; padding: 4px 10px; flex-shrink: 0; }
+/* estados */
+.ms-done .mapa-n { background: var(--gold); border-color: var(--gold); color: var(--midnight); }
+.ms-done .mapa-titulo { color: var(--cream); }
+.ms-actual .mapa-n { border-color: var(--gold); color: var(--gold); }
+.ms-actual .mapa-titulo { color: var(--gold-lt); }
+.ms-bloq { opacity: 0.4; }
+.ms-bloq .mapa-n { background: rgba(255,255,255,0.02); }
+.mapa-clases { padding: 2px 4px 18px; display: flex; flex-direction: column; gap: 4px; animation: fadeUp 0.35s ease both; }
+
+/* Bitácora - actividad guiada */
+.bitacora-hecha { display: flex; align-items: center; gap: 8px; margin-top: 16px; font-size: 13px; color: var(--gold); font-weight: 600; }
+.diario-pregunta { font-size: 13px; color: var(--faint); font-style: italic; margin-bottom: 8px; line-height: 1.4; }

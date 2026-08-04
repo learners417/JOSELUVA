@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Icono from "../lib/iconos";
+import { semanaActual, SEMANAS_RUEDA } from "../lib/progreso";
 
 // ============================================================
 // LA RUEDA DE LA VIDA - herramienta nativa e interactiva.
@@ -21,17 +22,28 @@ const AREAS = [
 ];
 
 export default function RuedaVida({ state, update }) {
-  const guardada = state.ruedaVida || {};
+  // De que tramo es esta medicion (S1/S4/S8/S12). El motor decide cual toca.
+  const actual = semanaActual(state);
+  const tramo = SEMANAS_RUEDA.filter((s) => s <= actual).pop() || 1;
+  const tramosPrevios = state.ruedaTramos || {};
+  const yaGuardada = tramosPrevios[tramo] || {};
+
   const [niveles, setNiveles] = useState(() => {
     const init = {};
-    AREAS.forEach((a) => (init[a.clave] = guardada[a.clave] || 0));
+    AREAS.forEach((a) => (init[a.clave] = yaGuardada[a.clave] || 0));
     return init;
   });
 
   function setNivel(clave, v) {
     const next = { ...niveles, [clave]: v };
     setNiveles(next);
-    update({ ruedaVida: next });
+    // Guarda en el tramo actual Y en ruedaVida (última, para compatibilidad).
+    const completa = AREAS.every((a) => next[a.clave] > 0);
+    const upd = { ruedaVida: next };
+    if (completa) {
+      upd.ruedaTramos = { ...tramosPrevios, [tramo]: next };
+    }
+    update(upd);
   }
 
   // Geometria de la rueda (SVG).
