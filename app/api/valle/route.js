@@ -8,8 +8,12 @@ import { sanearLexico } from "../../../lib/lexico";
 
 export const runtime = "edge";
 
-const PROXY_URL = "https://apighl.vercel.app/api/v1/chat/completions";
-const MODEL = "gpt-4o-mini";
+// Llama a Claude (Anthropic) directo desde el servidor de la app.
+// La API key vive en variable de entorno de Vercel: ANTHROPIC_API_KEY.
+// Nunca se expone en el cliente. Claude sostiene mejor el tono de
+// acompanamiento que un modelo generico.
+const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
+const MODEL = "claude-haiku-4-5-20251001";
 
 const SYSTEM = `Eres Valle, la voz de Jose Luis Valle Tulian dentro de su app del Metodo Serena Ambicion.
 
@@ -79,69 +83,71 @@ const MODOS = {
 export async function POST(req) {
   try {
     const body = await req.json();
-    const messages = Array.isArray(body.messages) ? body.messages : [];
+    let messages = Array.isArray(body.messages) ? body.messages : [];
+    // Anthropic exige que la conversacion empiece con rol 'user'.
+    // El saludo inicial de Valle (assistant) se descarta para la API.
+    while (messages.length && messages[0].role !== "user") {
+      messages = messages.slice(1);
+    }
     const nombre = typeof body.nombre === "string" ? body.nombre : "";
-    const proyecto = typeof body.proyecto === "string" ? body.proyecto : "";
-    const castillo = typeof body.castillo === "string" ? body.castillo : "";
-    const reino = typeof body.reino === "string" ? body.reino : "";
-    const tramo = typeof body.tramo === "string" ? body.tramo : "";
-    const dolores = Array.isArray(body.dolores) ? body.dolores : [];
-    const diagnosticos = Array.isArray(body.diagnosticos)
-      ? body.diagnosticos
-      : [];
+    const sueno = typeof body.sueno === "string" ? body.sueno : "";
+    const semana = typeof body.semana === "number" ? body.semana : 0;
     const modo = typeof body.modo === "string" ? body.modo : "";
 
     let sys = SYSTEM;
     if (nombre) sys += `\n\nLa persona se llama ${nombre}.`;
-    if (dolores.length) {
-      const nombresDolor = {
-        piloto: "el piloto automatico (los dias que se repiten)",
-        vaso: "el vaso lleno que se siente vacio",
-        decada: "la decada de oro que se escapa",
-      };
-      const lista = dolores
-        .map((d) => nombresDolor[d])
-        .filter(Boolean)
-        .join(", ");
-      if (lista)
-        sys += `\n\nEn su primera conversacion reconocio: ${lista}. Es el material con el que trabajas. No se lo recites: usalo para entenderla.`;
-    }
-    if (proyecto)
-      sys += `\n\nEl proyecto que declaro estar posponiendo, en sus palabras: "${proyecto}". Tenlo presente. Vuelve a el cuando sea util, sin forzarlo en cada respuesta.`;
-    if (castillo)
-      sys += `\n\nSu castillo (lo construido): "${castillo}".`;
-    if (reino) sys += `\n\nEl reino que quiere habitar: "${reino}".`;
-    if (tramo)
-      sys += `\n\nEsta en el tramo de edad ${tramo}: su decada de oro corre ahora.`;
-    if (diagnosticos.length)
-      sys += `\n\nDiagnosticos que ya completo en la app (resultado y puntaje de alineacion de 0 a 100): ${diagnosticos.join(
-        "; "
-      )}. Conoces esto sobre ella. Usalo para entenderla mejor, sin recitarselo.`;
+    if (sueno)
+      sys += `\n\nEl sueno o proyecto que declaro querer cumplir, en sus palabras: "${sueno}". Es el norte de todo el acompanamiento. Vuelve a el cuando sea util, sin forzarlo en cada respuesta.`;
+    if (semana)
+      sys += `\n\nVa por la semana ${semana} de las doce. Ten presente en que momento del camino esta.`;
     if (modo && MODOS[modo]) sys += `\n\n${MODOS[modo]}`;
 
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 15000);
 
-    const res = await fetch(PROXY_URL, {
+    // La API key vive en el entorno de Vercel (nunca en el cliente).
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    if (!apiKey) {
+      // Sin key configurada: avisa claro para diagnostico, no un error mudo.
+      return Response.json({
+        reply:
+          "Valle todavia no esta conectado. (Falta configurar la clave de IA en el servidor.)",
+        fallback: true,
+        reason: "no_api_key",
+      });
+    }
+
+    const res = await fetch(ANTHROPIC_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+      },
       signal: controller.signal,
       body: JSON.stringify({
         model: MODEL,
-        messages: [{ role: "system", content: sys }, ...messages],
-        temperature: 0.75,
         max_tokens: 400,
+        temperature: 0.75,
+        system: sys, // Claude toma el system prompt en su propio campo.
+        messages: messages, // solo user/assistant, sin el system.
       }),
     });
     clearTimeout(timer);
 
     const data = await res.json();
+    // Claude devuelve el texto en data.content[0].text
     const text =
-      data && data.choices && data.choices[0] && data.choices[0].message
-        ? data.choices[0].message.content
+      data && Array.isArray(data.content) && data.content[0] && data.content[0].text
+        ? data.content[0].text
         : null;
 
-    if (!text) return Response.json({ reply: fallback(), fallback: true });
+    if (!text) {
+      // Devuelve la causa real para diagnostico (error de la API, saldo, etc.)
+      const apiErr =
+        data && data.error && data.error.message ? data.error.message : "sin_respuesta";
+      return Response.json({ reply: fallback(), fallback: true, reason: apiErr });
+    }
     // Ultimo escudo: sanea cualquier palabra prohibida que se haya colado.
     return Response.json({ reply: sanearLexico(text.trim()), fallback: false });
   } catch (e) {

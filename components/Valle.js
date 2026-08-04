@@ -45,20 +45,13 @@ export default function Valle({ state, update }) {
   // Contexto rico para el system prompt.
   function contexto() {
     const o = state.onboarding || {};
-    const p = state.plano || {};
-    const dr = state.diagResultados || {};
-    // Resumen legible de los diagnosticos completados.
-    const diag = Object.entries(dr).map(
-      ([k, v]) => `${k}: ${v.titulo} (${v.score})`
-    );
+    // Cuantas semanas lleva completas (para que Valle sepa el momento del camino).
+    const vistas = state.clasesVistas || [];
+    const semana = vistas.length > 0 ? Math.min(12, Math.ceil(vistas.length / 3)) : 0;
     return {
       nombre,
-      dolores: o.dolores || (o.dolor ? [o.dolor] : []),
-      proyecto: p.proyecto || "",
-      castillo: p.castillo || "",
-      reino: p.reino || "",
-      tramo: p.tramo || "",
-      diagnosticos: diag,
+      sueno: o.sueno || "",
+      semana,
     };
   }
 

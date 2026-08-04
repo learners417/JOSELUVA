@@ -91,9 +91,9 @@ check("T3 plano (decada de oro + castillo/reino)",
 va = leer("components/Valle.js") or ""
 rt = leer("app/api/valle/route.js") or ""
 check("T4 VALLE (memoria + modos + contexto)",
-      "valleChat" in va and "activarModo" in va and "castillo" in va)
-check("T4 VALLE API (blindaje + modos + dolores)",
-      "BLINDAJE" in rt and "MODOS" in rt and "nombresDolor" in rt)
+      "valleChat" in va and "activarModo" in va and "sueno" in va)
+check("T4 VALLE API (blindaje + modos + curso)",
+      "BLINDAJE" in rt and "MODOS" in rt and "DOCE SEMANAS" in rt)
 
 # ---------- TURNO 5: La Obra por evidencia ----------
 ob5 = leer("components/Obra.js") or ""
