@@ -21,12 +21,14 @@ const AREAS = [
   { clave: "entorno", nombre: "Entorno y espacio" },
 ];
 
-export default function RuedaVida({ state, update }) {
+export default function RuedaVida({ state, update, goTo }) {
   // De que tramo es esta medicion (S1/S4/S8/S12). El motor decide cual toca.
   const actual = semanaActual(state);
   const tramo = SEMANAS_RUEDA.filter((s) => s <= actual).pop() || 1;
   const tramosPrevios = state.ruedaTramos || {};
   const yaGuardada = tramosPrevios[tramo] || {};
+  // El tramo anterior medido (para mostrar evolucion).
+  const tramoAnterior = SEMANAS_RUEDA.filter((s) => s < tramo && tramosPrevios[s]).pop();
 
   const [niveles, setNiveles] = useState(() => {
     const init = {};
@@ -157,6 +159,47 @@ export default function RuedaVida({ state, update }) {
               : "Tu rueda hoy gira desigual. No es un problema: es un punto de partida honesto. Desde acá se rediseña."}
           </p>
         </div>
+      )}
+
+      {/* EVOLUCION: cambio respecto del tramo anterior */}
+      {completa && tramoAnterior && (
+        <div className="rueda-evol">
+          <div className="chip">Tu evolución</div>
+          <p className="rueda-evol-lead">
+            Desde la semana {tramoAnterior} hasta hoy, esto se movió:
+          </p>
+          <div className="rueda-evol-lista">
+            {AREAS.map((a) => {
+              const antes = (tramosPrevios[tramoAnterior] || {})[a.clave] || 0;
+              const ahora = niveles[a.clave] || 0;
+              const dif = ahora - antes;
+              return (
+                <div className="rueda-evol-row" key={a.clave}>
+                  <span className="rueda-evol-area">{a.nombre}</span>
+                  <span className="rueda-evol-nums">
+                    {antes} → {ahora}
+                    {dif !== 0 && (
+                      <span className={"rueda-evol-dif" + (dif > 0 ? " up" : " down")}>
+                        {dif > 0 ? "+" + dif : dif}
+                      </span>
+                    )}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* CIERRE: siguiente paso claro */}
+      {completa && (
+        <button
+          className="btn btn-g"
+          style={{ marginTop: 24 }}
+          onClick={() => goTo && goTo("hoy")}
+        >
+          {tramo === 12 ? "Ver el cierre de mi camino" : "Continuar mi camino"}
+        </button>
       )}
 
       <p className="foot-note">Serena Ambición · José Luis Valle</p>

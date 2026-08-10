@@ -139,7 +139,61 @@ export default function Diario({ state, update }) {
         </div>
       )}
 
+      {/* HISTORIAL: lo escrito en semanas anteriores */}
+      <HistorialBitacora entradas={state.bitacora || []} actual={actual} />
+
       <p className="foot-note">Serena Ambición · José Luis Valle</p>
+    </div>
+  );
+}
+
+// Semanas ya completadas, colapsables. El cliente vuelve a leer lo que escribio.
+function HistorialBitacora({ entradas, actual }) {
+  const previas = entradas
+    .filter((e) => e.semanaN && e.semanaN < actual && (e.items || []).length)
+    .sort((a, b) => b.semanaN - a.semanaN);
+  const [abierta, setAbierta] = useState(null);
+
+  if (previas.length === 0) return null;
+
+  return (
+    <div className="hist-bita">
+      <div className="chip" style={{ marginBottom: 16 }}>
+        Tu recorrido escrito
+      </div>
+      {previas.map((e) => {
+        const open = abierta === e.semanaN;
+        return (
+          <div key={e.semanaN} className="hist-sem">
+            <button
+              className="hist-head"
+              onClick={() => setAbierta(open ? null : e.semanaN)}
+            >
+              <div>
+                <span className="hist-sem-n">Semana {e.semanaN}</span>
+                {e.subtitulo && <span className="hist-sem-sub"> · {e.subtitulo}</span>}
+              </div>
+              <span className={"pc-caret" + (open ? " pc-caret-open" : "")}>
+                <Icono name="flecha" size={13} />
+              </span>
+            </button>
+            {open && (
+              <div className="hist-items">
+                {e.items.map((it, i) => (
+                  <div className="hist-item" key={i}>
+                    <div className="hist-item-ruta">
+                      {it.nombre}
+                      {it.etiqueta && <span className="hist-item-tag"> · {it.etiqueta}</span>}
+                    </div>
+                    <p className="hist-item-preg">{it.pregunta}</p>
+                    <p className="hist-item-resp">{it.respuesta}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }

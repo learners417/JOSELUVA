@@ -610,3 +610,68 @@ select.input { appearance: none; -webkit-appearance: none; background-image: url
 .prog-chip{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border:1px solid var(--goldd);border-radius:var(--rad);background:linear-gradient(180deg,rgba(207,176,83,.04),var(--navy));margin-bottom:28px}
 .prog-chip-lbl{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600}
 .prog-chip-val{font-family:var(--sf);font-size:18px;color:var(--cream);font-weight:600}
+
+/* Rueda - evolución entre tramos */
+.rueda-evol{margin-top:24px;padding:24px 22px;border:1px solid var(--goldd);border-radius:var(--rad);background:var(--navy)}
+.rueda-evol-lead{font-size:15px;color:var(--dim);margin:10px 0 18px;font-weight:300}
+.rueda-evol-lista{display:flex;flex-direction:column;gap:2px}
+.rueda-evol-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border-soft)}
+.rueda-evol-row:last-child{border-bottom:none}
+.rueda-evol-area{font-size:15px;color:var(--text);font-weight:300}
+.rueda-evol-nums{font-family:var(--sf);font-size:17px;color:var(--cream);font-weight:600;display:flex;align-items:center;gap:10px}
+.rueda-evol-dif{font-family:var(--sn);font-size:12px;font-weight:600;padding:2px 7px;border-radius:2px;letter-spacing:.5px}
+.rueda-evol-dif.up{color:#8FBF95;border:1px solid rgba(143,191,149,.3)}
+.rueda-evol-dif.down{color:#C77B6E;border:1px solid rgba(199,123,110,.3)}
+
+/* Bitácora - historial de semanas anteriores */
+.hist-bita{margin-top:36px;padding-top:28px;border-top:1px solid var(--border-soft)}
+.hist-sem{border-bottom:1px solid var(--border-soft)}
+.hist-head{display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:none;cursor:pointer;padding:16px 2px;text-align:left}
+.hist-sem-n{font-family:var(--sf);font-size:18px;color:var(--cream);font-weight:600}
+.hist-sem-sub{font-size:14px;color:var(--faint);font-weight:300}
+.hist-items{padding:4px 2px 18px;display:flex;flex-direction:column;gap:16px;animation:fadeUp .35s ease both}
+.hist-item{padding-left:14px;border-left:2px solid var(--goldd)}
+.hist-item-ruta{font-family:var(--sf);font-size:16px;color:var(--gold-lt);font-weight:600;margin-bottom:4px}
+.hist-item-tag{font-family:var(--sn);font-size:12px;color:var(--faint);font-weight:400;letter-spacing:.3px}
+.hist-item-preg{font-size:14px;color:var(--faint);font-style:italic;line-height:1.5;margin-bottom:6px}
+.hist-item-resp{font-size:15.5px;color:var(--text);line-height:1.6;font-weight:300}
+
+/* ============ MODO ADMIN ============ */
+.admin-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.admin-salir{background:none;border:1px solid var(--border-soft);color:var(--dim);font-family:var(--sn);font-size:12px;letter-spacing:1px;text-transform:uppercase;padding:7px 16px;border-radius:var(--rad);cursor:pointer;font-weight:600}
+.admin-salir:hover{border-color:var(--goldd);color:var(--gold)}
+.admin-tabs{display:flex;gap:8px;margin:24px 0 28px;border-bottom:1px solid var(--border-soft)}
+.admin-tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--dim);font-family:var(--sn);font-size:14px;font-weight:500;padding:12px 4px;margin-bottom:-1px;cursor:pointer;letter-spacing:.3px}
+.admin-tab.at-on{color:var(--gold);border-bottom-color:var(--gold)}
+.admin-hint{font-size:15px;color:var(--dim);margin-bottom:20px;font-weight:300;line-height:1.6}
+.admin-buscar{display:flex;gap:10px;margin-bottom:24px}
+.admin-buscar .input{flex:1}
+.admin-buscar .btn{width:auto;padding:0 28px}
+.admin-msg{font-size:15px;color:var(--dim);padding:16px;border:1px solid var(--border-soft);border-radius:var(--rad);font-weight:300;line-height:1.6}
+/* ficha de cliente */
+.ficha{border:1px solid var(--goldd);border-radius:var(--rad);padding:26px 24px;background:var(--navy)}
+.ficha-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.ficha-nombre{font-family:var(--sf);font-size:26px;color:var(--cream);font-weight:600}
+.ficha-prog{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);font-weight:600;border:1px solid var(--goldd);border-radius:2px;padding:5px 12px}
+.ficha-sueno{border-left:2px solid var(--gold);padding-left:16px;margin-bottom:22px}
+.ficha-lbl{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600;display:block;margin-bottom:6px}
+.ficha-sueno p{font-family:var(--sf);font-size:18px;font-style:italic;color:var(--cream);line-height:1.4;font-weight:500}
+.ficha-stats{display:flex;gap:24px;margin-bottom:20px;flex-wrap:wrap}
+.ficha-n{font-family:var(--sf);font-size:32px;color:var(--gold-lt);font-weight:600;line-height:1;display:block}
+.ficha-n span{font-size:16px;color:var(--dim)}
+.ficha-l{font-size:12px;color:var(--dim);margin-top:6px;font-weight:300}
+.ficha-barra{height:3px;background:var(--border-soft);border-radius:3px;overflow:hidden;margin-bottom:14px}
+.ficha-barra span{display:block;height:100%;background:var(--gold);transition:width .4s}
+.ficha-nota{font-size:14px;color:var(--faint);font-style:italic}
+/* generar códigos */
+.admin-campo{margin-bottom:8px}
+.admin-label{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600;display:block;margin-bottom:14px}
+.admin-opciones{display:flex;flex-direction:column;gap:10px}
+.admin-op{text-align:left;background:var(--navy);border:1px solid var(--border-soft);border-radius:var(--rad);padding:18px 20px;cursor:pointer;transition:border-color .3s}
+.admin-op.ao-on{border-color:var(--gold)}
+.admin-op-nombre{font-family:var(--sf);font-size:19px;color:var(--cream);font-weight:600;display:block;margin-bottom:4px}
+.admin-op-desc{font-size:14px;color:var(--dim);font-weight:300}
+.admin-generado{margin-top:24px;padding:24px;border:1px solid var(--gold);border-radius:var(--rad);background:linear-gradient(180deg,rgba(207,176,83,.06),var(--navy));text-align:center}
+.admin-gen-lbl{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600}
+.admin-gen-cod{font-family:var(--sf);font-size:34px;color:var(--gold-lt);font-weight:600;letter-spacing:2px;margin:12px 0}
+.admin-gen-nota{font-size:14px;color:var(--dim);font-weight:300;line-height:1.6}

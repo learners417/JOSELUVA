@@ -3,11 +3,12 @@
 import { useState, useEffect, useRef } from "react";
 import { loadState, saveState, resetState } from "../lib/store";
 import { syncDisponible, hidratar, subir } from "../lib/sync";
-import { PREFIJOS_VALIDOS, PREFIJO_A_PROGRAMA } from "../lib/programa";
+import { PREFIJOS_VALIDOS, PREFIJO_A_PROGRAMA, PREFIJO_ADMIN } from "../lib/programa";
 
 import Login from "../components/Login";
 import Onboarding from "../components/Onboarding";
 import AppShell from "../components/AppShell";
+import Admin from "../components/Admin";
 import Guardado from "../components/Guardado";
 
 export default function Page() {
@@ -104,6 +105,18 @@ export default function Page() {
 
   if (!state.acceso) {
     return <Login onAccess={handleAccess} onDemo={handleDemo} />;
+  }
+
+  // Modo administrador: Jose y su equipo entran con codigo ADMIN-XXXX
+  if (state.acceso.plan === PREFIJO_ADMIN) {
+    return (
+      <Admin
+        onSalir={() => {
+          resetState();
+          setState(loadState());
+        }}
+      />
+    );
   }
 
   if (!state.onboarding) {

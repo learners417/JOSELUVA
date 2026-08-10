@@ -84,7 +84,7 @@ export default function AppShell({ state, update, onReset }) {
     <div className="app-root">
       {tab === "hoy" && <Hoy state={state} update={update} goTo={setTab} />}
       {tab === "camino" && <Camino state={state} update={update} />}
-      {tab === "rueda" && <RuedaVida state={state} update={update} />}
+      {tab === "rueda" && <RuedaVida state={state} update={update} goTo={setTab} />}
       {tab === "diario" && <Diario state={state} update={update} />}
       {tab === "plan" && <PlanServicio state={state} update={update} />}
       {tab === "ritual" && (
