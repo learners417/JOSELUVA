@@ -590,3 +590,23 @@ select.input { appearance: none; -webkit-appearance: none; background-image: url
 /* Bitácora - actividad guiada */
 .bitacora-hecha { display: flex; align-items: center; gap: 8px; margin-top: 16px; font-size: 13px; color: var(--gold); font-weight: 600; }
 .diario-pregunta { font-size: 13px; color: var(--faint); font-style: italic; margin-bottom: 8px; line-height: 1.4; }
+
+/* ============ BITÁCORA - matriz de rutas (fiel al Excel) ============ */
+.bita-prog{display:flex;align-items:center;gap:16px;margin-bottom:28px}
+.bita-prog-n{font-family:var(--sf);font-size:22px;font-weight:600;color:var(--gold-lt);white-space:nowrap}
+.bita-prog-n span{font-family:var(--sn);font-size:13px;color:var(--dim);font-weight:300}
+.bita-prog-bar{flex:1;height:2px;background:var(--border-soft);border-radius:2px;overflow:hidden}
+.bita-prog-bar span{display:block;height:100%;background:var(--gold);transition:width .4s cubic-bezier(.22,1,.36,1)}
+.bita-lista{display:flex;flex-direction:column;gap:16px;margin-bottom:24px}
+.bita-item{background:var(--navy);border:1px solid var(--border-soft);border-radius:var(--rad);padding:22px 20px;transition:border-color .3s}
+.bita-item.bi-on{border-color:var(--goldd)}
+.bita-ruta{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.bita-ruta-nombre{font-family:var(--sf);font-size:18px;font-weight:600;color:var(--cream);line-height:1.15}
+.bita-ruta-tag{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);font-weight:600;border:1px solid var(--goldd);border-radius:2px;padding:2px 8px}
+.bita-pregunta{font-size:15.5px;color:var(--dim);line-height:1.6;margin-bottom:14px;font-weight:300}
+.bita-ta{min-height:80px}
+
+/* Chip del programa del cliente (en Más) */
+.prog-chip{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border:1px solid var(--goldd);border-radius:var(--rad);background:linear-gradient(180deg,rgba(207,176,83,.04),var(--navy));margin-bottom:28px}
+.prog-chip-lbl{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600}
+.prog-chip-val{font-family:var(--sf);font-size:18px;color:var(--cream);font-weight:600}

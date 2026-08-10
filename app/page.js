@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { loadState, saveState, resetState } from "../lib/store";
 import { syncDisponible, hidratar, subir } from "../lib/sync";
-import { PREFIJOS_VALIDOS } from "../lib/programa";
+import { PREFIJOS_VALIDOS, PREFIJO_A_PROGRAMA } from "../lib/programa";
 
 import Login from "../components/Login";
 import Onboarding from "../components/Onboarding";
@@ -54,9 +54,12 @@ export default function Page() {
     const prefijo = codigo.split("-")[0].toUpperCase();
     if (!PREFIJOS_VALIDOS.includes(prefijo)) return false;
 
+    const programa = PREFIJO_A_PROGRAMA[prefijo] || "autoguiado";
+
     let base = {
       ...state,
       acceso: { codigo, plan: prefijo },
+      programa,
       createdAt: state.createdAt || new Date().toISOString(),
     };
 
@@ -65,8 +68,8 @@ export default function Page() {
       setGuardando("saving");
       const remoto = await hidratar(codigo);
       if (remoto && typeof remoto === "object") {
-        // La nube manda para el progreso; conservamos el acceso actual.
-        base = { ...base, ...remoto, acceso: { codigo, plan: prefijo } };
+        // La nube manda para el progreso; conservamos acceso y programa.
+        base = { ...base, ...remoto, acceso: { codigo, plan: prefijo }, programa };
       }
       setGuardando("idle");
     }

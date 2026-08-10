@@ -2,40 +2,65 @@
 
 import { useState } from "react";
 import { SEMANAS } from "../lib/curso";
-import { semanaActual, PREGUNTA_SEMANA, semanaCompleta } from "../lib/progreso";
+import { semanaActual } from "../lib/progreso";
+import { preguntasSemana } from "../lib/bitacora";
+import { rutasIncluidas } from "../lib/programas";
 import Icono from "../lib/iconos";
 
 // ============================================================
-// LA BITACORA - la actividad guiada de cada semana.
-// No es un diario en blanco: cada semana trae SU pregunta
-// (ligada a la clase). Responderla completa la semana y
-// desbloquea la siguiente. Ahi el curso se vuelve tuyo.
+// LA BITACORA - fiel al proceso real de Jose (Excel oficial).
+// Muestra solo las rutas incluidas en el PROGRAMA del cliente
+// (autoguiado / coaching / mentoria). Cada ruta trae su
+// pregunta textual ligada a la clase de esa semana.
 // ============================================================
 
 export default function Diario({ state, update }) {
-  const entradas = state.bitacora || [];
-  const hechas = state.bitacoraSemanas || [];
   const actual = semanaActual(state);
   const semanaObj = SEMANAS.find((w) => w.n === actual);
-  const pregunta = PREGUNTA_SEMANA[actual] || "¿Que te llevas de esta semana?";
+  // Filtra las preguntas: solo las rutas que el cliente compro.
+  const incluidas = rutasIncluidas(state.programa);
+  const preguntas = preguntasSemana(actual).filter((p) =>
+    incluidas.includes(p.ruta)
+  );
+  const hechas = state.bitacoraSemanas || [];
   const yaHecha = hechas.includes(actual);
 
-  const [texto, setTexto] = useState("");
+  // Respuestas guardadas de esta semana: { "s3-mindfulness": "texto", ... }
+  const guardadas = (state.bitacoraRespuestas || {})[actual] || {};
+  const [respuestas, setRespuestas] = useState(guardadas);
+
+  function setResp(ruta, idx, val) {
+    const key = ruta + "-" + idx;
+    setRespuestas((r) => ({ ...r, [key]: val }));
+  }
+
+  // Cuantas respondio (con algo de texto)
+  const respondidas = preguntas.filter(
+    (p, i) => (respuestas[p.ruta + "-" + i] || "").trim().length > 2
+  ).length;
+  const completa = respondidas === preguntas.length && preguntas.length > 0;
 
   function guardar() {
-    if (texto.trim().length < 3) return;
+    const nuevoTramo = { ...(state.bitacoraRespuestas || {}), [actual]: respuestas };
+    // Entrada legible para el recorrido escrito
+    const entradas = state.bitacora || [];
     const nueva = {
       semana: `Semana ${actual}`,
       semanaN: actual,
-      pregunta,
-      texto: texto.trim(),
+      subtitulo: semanaObj?.subtitulo || "",
       fecha: new Date().toISOString().slice(0, 10),
+      items: preguntas.map((p, i) => ({
+        nombre: p.nombre,
+        etiqueta: p.etiqueta,
+        pregunta: p.pregunta,
+        respuesta: respuestas[p.ruta + "-" + i] || "",
+      })).filter((x) => x.respuesta.trim()),
     };
     update({
-      bitacora: [nueva, ...entradas],
-      bitacoraSemanas: hechas.includes(actual) ? hechas : [...hechas, actual],
+      bitacoraRespuestas: nuevoTramo,
+      bitacora: [nueva, ...entradas.filter((e) => e.semanaN !== actual)],
+      bitacoraSemanas: completa && !hechas.includes(actual) ? [...hechas, actual] : hechas,
     });
-    setTexto("");
   }
 
   return (
@@ -45,60 +70,73 @@ export default function Diario({ state, update }) {
         Tu <em>Bitácora</em>
       </h1>
       <p className="screen-sub">
-        El curso se mira. El proceso se escribe. Esta es la pregunta de tu
-        semana: respóndela con honestidad y quedará registrada en tu camino.
+        El curso se mira. El proceso se escribe. Cada práctica de esta semana
+        deja una pregunta. Baja aquí lo que de verdad notas — así el proceso
+        queda tuyo.
       </p>
 
-      {/* La pregunta de la semana - la actividad */}
-      <div className="card card-gold">
-        <div className="chip">Semana {actual} · {semanaObj?.subtitulo}</div>
-        <p className="mirror" style={{ marginBottom: 20 }}>
-          {pregunta}
-        </p>
-        <textarea
-          className="textarea"
-          value={texto}
-          placeholder="Tómate un momento. Escribe lo que de verdad notas..."
-          onChange={(e) => setTexto(e.target.value)}
-          style={{ minHeight: 130 }}
-        />
-        <button
-          className="btn btn-g"
-          style={{ marginTop: 16 }}
-          onClick={guardar}
-          disabled={texto.trim().length < 3}
-        >
-          {yaHecha ? "Guardar otra reflexión" : "Completar la actividad"}
-        </button>
-        {yaHecha && (
-          <div className="bitacora-hecha">
-            <Icono name="check" size={15} /> Actividad de la semana {actual}{" "}
-            completa
-          </div>
-        )}
+      {/* Progreso de la semana */}
+      <div className="bita-prog">
+        <span className="bita-prog-n">
+          {respondidas} <span>de {preguntas.length}</span>
+        </span>
+        <div className="bita-prog-bar">
+          <span
+            style={{
+              width: preguntas.length
+                ? (respondidas / preguntas.length) * 100 + "%"
+                : "0%",
+            }}
+          />
+        </div>
       </div>
 
-      {/* Lo registrado */}
-      {entradas.length > 0 && (
-        <>
-          <div className="chip" style={{ marginTop: 28 }}>
-            Tu recorrido escrito
-          </div>
-          <div className="diario-lista">
-            {entradas.map((e, i) => (
-              <div className="diario-entrada" key={i}>
-                <div className="diario-top">
-                  <span className="diario-semana">{e.semana}</span>
-                  <span className="diario-fecha">{e.fecha}</span>
-                </div>
-                {e.pregunta && (
-                  <p className="diario-pregunta">{e.pregunta}</p>
-                )}
-                <p className="diario-texto">{e.texto}</p>
+      {/* Las rutas de la semana, cada una con su pregunta textual */}
+      <div className="bita-lista">
+        {preguntas.map((p, i) => {
+          const key = p.ruta + "-" + i;
+          const val = respuestas[key] || "";
+          const lista = val.trim().length > 2;
+          return (
+            <div key={key} className={"bita-item" + (lista ? " bi-on" : "")}>
+              <div className="bita-ruta">
+                <span className="bita-ruta-nombre">{p.nombre}</span>
+                {p.etiqueta && <span className="bita-ruta-tag">{p.etiqueta}</span>}
               </div>
-            ))}
-          </div>
-        </>
+              <p className="bita-pregunta">{p.pregunta}</p>
+              <textarea
+                className="textarea bita-ta"
+                value={val}
+                placeholder="Tu insight / reflexión..."
+                onChange={(e) => setResp(p.ruta, i, e.target.value)}
+              />
+            </div>
+          );
+        })}
+      </div>
+
+      {preguntas.length === 0 && (
+        <div className="card">
+          <p className="mirror">
+            Las preguntas de esta semana se cargan cuando abras sus clases.
+          </p>
+        </div>
+      )}
+
+      {/* Guardar */}
+      {preguntas.length > 0 && (
+        <button
+          className="btn btn-g"
+          style={{ marginTop: 8 }}
+          onClick={guardar}
+        >
+          {completa ? "Completar la semana" : "Guardar mi avance"}
+        </button>
+      )}
+      {yaHecha && (
+        <div className="bitacora-hecha">
+          <Icono name="check" size={15} /> Semana {actual} completa
+        </div>
       )}
 
       <p className="foot-note">Serena Ambición · José Luis Valle</p>

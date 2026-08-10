@@ -29,7 +29,10 @@ const ITEMS = [
 const FOTO_JOSE =
   "https://assets.cdn.filesafe.space/m0oQv3eLz3Ewj8PeqgqY/media/67be22d3d5a8ef69127c6b6c.png";
 
-export default function Mas({ goTo }) {
+import { nombrePrograma } from "../lib/programas";
+
+export default function Mas({ goTo, state }) {
+  const prog = nombrePrograma(state?.programa);
   return (
     <div className="screen">
       <div className="eyebrow">Mas</div>
@@ -45,6 +48,12 @@ export default function Mas({ goTo }) {
           <div className="jose-nombre">Jose Luis Valle Tulian</div>
           <div className="jose-cred">Master Certified Coach · ICF</div>
         </div>
+      </div>
+
+      {/* Programa del cliente */}
+      <div className="prog-chip">
+        <span className="prog-chip-lbl">Tu programa</span>
+        <span className="prog-chip-val">{prog}</span>
       </div>
 
       {ITEMS.map((i) => (

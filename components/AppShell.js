@@ -95,7 +95,7 @@ export default function AppShell({ state, update, onReset }) {
       {tab === "valle" && <Valle state={state} update={update} />}
       {tab === "alto" && <Alto state={state} update={update} />}
       {tab === "instrumentos" && <Instrumentos state={state} update={update} />}
-      {tab === "mas" && <Mas goTo={setTab} />}
+      {tab === "mas" && <Mas goTo={setTab} state={state} />}
       {tab === "mesa" && <Mesa />}
       {tab === "agenda" && <Agenda state={state} />}
       {tab === "historia" && <Historia />}
