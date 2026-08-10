@@ -36,6 +36,12 @@ export default function Admin({ onSalir }) {
           Ver progreso
         </button>
         <button
+          className={"admin-tab" + (tab === "mensajes" ? " at-on" : "")}
+          onClick={() => setTab("mensajes")}
+        >
+          Mensajes
+        </button>
+        <button
           className={"admin-tab" + (tab === "codigos" ? " at-on" : "")}
           onClick={() => setTab("codigos")}
         >
@@ -43,9 +49,66 @@ export default function Admin({ onSalir }) {
         </button>
       </div>
 
-      {tab === "progreso" ? <VerProgreso /> : <GenerarCodigos />}
+      {tab === "progreso" && <VerProgreso />}
+      {tab === "mensajes" && <Mensajes />}
+      {tab === "codigos" && <GenerarCodigos />}
 
       <p className="foot-note">Uso interno · José Luis Valle</p>
+    </div>
+  );
+}
+
+// --- Mensajes de los clientes (soporte + pedidos de plan) ---
+function Mensajes() {
+  const [codigo, setCodigo] = useState("");
+  const [msgs, setMsgs] = useState(null);
+  const [estado, setEstado] = useState("idle");
+
+  async function buscar() {
+    if (codigo.trim().length < 3) return;
+    if (!syncDisponible()) { setEstado("nosync"); return; }
+    setEstado("cargando");
+    try {
+      const remoto = await hidratar(codigo.trim());
+      setMsgs(remoto?.soporteMensajes || []);
+      setEstado("ok");
+    } catch { setEstado("error"); }
+  }
+
+  return (
+    <div>
+      <p className="admin-hint">
+        Escribe el código del cliente para ver los mensajes que te envió desde
+        la app.
+      </p>
+      <div className="admin-buscar">
+        <input
+          className="input"
+          value={codigo}
+          placeholder="Código del cliente"
+          onChange={(e) => setCodigo(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && buscar()}
+        />
+        <button className="btn btn-g" onClick={buscar}>Ver</button>
+      </div>
+      {estado === "nosync" && <p className="admin-msg">La sincronización en la nube no está configurada.</p>}
+      {estado === "cargando" && <p className="admin-msg">Cargando…</p>}
+      {estado === "ok" && msgs && msgs.length === 0 && <p className="admin-msg">Sin mensajes de este cliente.</p>}
+      {estado === "ok" && msgs && msgs.length > 0 && (
+        <div className="admin-msgs">
+          {msgs.slice().reverse().map((m, i) => (
+            <div key={i} className={"admin-msg-item" + (m.tipo === "plan" ? " es-plan" : "")}>
+              <div className="admin-msg-top">
+                <span className="admin-msg-tipo">
+                  {m.tipo === "plan" ? "Quiere ampliar plan" : "Consulta"}
+                </span>
+                <span className="admin-msg-fecha">{(m.fecha || "").slice(0, 10)}</span>
+              </div>
+              <p className="admin-msg-texto">{m.texto}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

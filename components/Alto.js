@@ -3,8 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import { T } from "../lib/textos";
 import { AUDIO_ALTO } from "../lib/programa";
-import { DIAGNOSTICOS } from "../lib/diagnosticos";
-import Diagnostico from "./Diagnostico";
 
 // ============================================================
 // EL ALTO v3 - regulacion, no wellness.
@@ -23,10 +21,8 @@ export default function Alto({ state, update }) {
   const [activo, setActivo] = useState(false);
   const [fase, setFase] = useState(0);
   const [ronda, setRonda] = useState(0);
-  const [abrirDiag, setAbrirDiag] = useState(false);
   const timerRef = useRef(null);
 
-  const res = (state?.diagResultados || {}).copiloto;
 
   useEffect(() => {
     if (!activo) return;
@@ -102,43 +98,9 @@ export default function Alto({ state, update }) {
         </audio>
       </div>
 
-      {/* Conexion al diagnostico Copiloto de Regulacion */}
-      <div className="card">
-        <div className="chip">Tu cabina bajo presion</div>
-        {res ? (
-          <>
-            <p className="body-p" style={{ marginBottom: 12 }}>
-              En tu diagnostico de regulacion quedaste en:{" "}
-              <strong>{res.titulo}</strong> ({res.score}).
-            </p>
-            <button className="btn btn-s" onClick={() => setAbrirDiag(true)}>
-              Volver a medir
-            </button>
-          </>
-        ) : (
-          <>
-            <p className="body-p" style={{ marginBottom: 12 }}>
-              {DIAGNOSTICOS.copiloto.intro}
-            </p>
-            <button className="btn btn-g" onClick={() => setAbrirDiag(true)}>
-              Medir mi regulacion
-            </button>
-          </>
-        )}
-      </div>
-
       <p className="foot-note">
         {T.marca} &middot; {T.autor}
       </p>
-
-      {abrirDiag && (
-        <Diagnostico
-          clave="copiloto"
-          state={state}
-          update={update}
-          onClose={() => setAbrirDiag(false)}
-        />
-      )}
-    </div>
+</div>
   );
 }

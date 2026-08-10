@@ -3,28 +3,21 @@
 import { useState } from "react";
 import { T } from "../lib/textos";
 
-import Ritual from "./Ritual";
 import Camino from "./Camino";
 import Hoy from "./Hoy";
 import RuedaVida from "./RuedaVida";
 import Diario from "./Diario";
-import PlanServicio from "./PlanServicio";
-import Obra from "./Obra";
-import Plano from "./Plano";
 import Valle from "./Valle";
 import Alto from "./Alto";
-import Instrumentos from "./Instrumentos";
-import Mesa from "./Mesa";
-import Agenda from "./Agenda";
-import Mas from "./Mas";
-import Historia from "./Historia";
+import Yo from "./Yo";
+import Libro from "./Libro";
 
 const NAV = [
   { key: "hoy", lbl: "Hoy", ico: "sun" },
   { key: "camino", lbl: "Camino", ico: "map" },
   { key: "diario", lbl: "Bitácora", ico: "building" },
   { key: "valle", lbl: T.nav.valle, ico: "chat" },
-  { key: "mas", lbl: "Mas", ico: "grid" },
+  { key: "yo", lbl: "Yo", ico: "user" },
 ];
 
 function Icon({ name }) {
@@ -52,18 +45,10 @@ function Icon({ name }) {
         <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
       </>
     ),
-    pause: (
+    user: (
       <>
-        <circle cx="12" cy="12" r="9" />
-        <path d="M10 9v6M14 9v6" />
-      </>
-    ),
-    grid: (
-      <>
-        <rect x="3" y="3" width="7" height="7" />
-        <rect x="14" y="3" width="7" height="7" />
-        <rect x="3" y="14" width="7" height="7" />
-        <rect x="14" y="14" width="7" height="7" />
+        <circle cx="12" cy="9" r="4" />
+        <path d="M5 20c0-4 3-6 7-6s7 2 7 6" />
       </>
     ),
   };
@@ -77,28 +62,16 @@ function Icon({ name }) {
 export default function AppShell({ state, update, onReset }) {
   const [tab, setTab] = useState("hoy");
 
-  const nombre = state.onboarding?.nombre || "";
-  const proyecto = state.plano?.proyecto || "";
-
   return (
     <div className="app-root">
       {tab === "hoy" && <Hoy state={state} update={update} goTo={setTab} />}
       {tab === "camino" && <Camino state={state} update={update} />}
       {tab === "rueda" && <RuedaVida state={state} update={update} goTo={setTab} />}
       {tab === "diario" && <Diario state={state} update={update} />}
-      {tab === "plan" && <PlanServicio state={state} update={update} />}
-      {tab === "ritual" && (
-        <Ritual state={state} update={update} onReset={onReset} goTo={setTab} />
-      )}
-      {tab === "obra" && <Obra state={state} update={update} goTo={setTab} />}
-      {tab === "plano" && <Plano state={state} update={update} />}
       {tab === "valle" && <Valle state={state} update={update} />}
       {tab === "alto" && <Alto state={state} update={update} />}
-      {tab === "instrumentos" && <Instrumentos state={state} update={update} />}
-      {tab === "mas" && <Mas goTo={setTab} state={state} />}
-      {tab === "mesa" && <Mesa />}
-      {tab === "agenda" && <Agenda state={state} />}
-      {tab === "historia" && <Historia />}
+      {tab === "yo" && <Yo state={state} update={update} goTo={setTab} />}
+      {tab === "libro" && <Libro onVolver={() => setTab("yo")} />}
 
       <nav className="bottomnav">
         {NAV.map((n) => (

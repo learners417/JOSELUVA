@@ -675,3 +675,53 @@ select.input { appearance: none; -webkit-appearance: none; background-image: url
 .admin-gen-lbl{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600}
 .admin-gen-cod{font-family:var(--sf);font-size:34px;color:var(--gold-lt);font-weight:600;letter-spacing:2px;margin:12px 0}
 .admin-gen-nota{font-size:14px;color:var(--dim);font-weight:300;line-height:1.6}
+
+/* ============ YO - panel de usuario ============ */
+.yo-perfil{display:flex;align-items:center;gap:18px;margin-bottom:28px}
+.yo-foto{position:relative;width:72px;height:72px;border-radius:50%;overflow:hidden;cursor:pointer;flex-shrink:0;border:1px solid var(--gold)}
+.yo-foto img{width:100%;height:100%;object-fit:cover}
+.yo-foto-ph{display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:var(--navy);font-family:var(--sf);font-size:30px;color:var(--gold-lt);font-weight:600}
+.yo-foto-edit{position:absolute;bottom:0;right:0;width:24px;height:24px;background:var(--gold);color:var(--midnight);display:flex;align-items:center;justify-content:center;border-radius:50% 0 0 0}
+.yo-perfil-nombre{font-family:var(--sf);font-size:24px;color:var(--cream);font-weight:600;line-height:1.1}
+.yo-perfil-prog{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-top:5px}
+/* sueño */
+.yo-sueno{border:1px solid var(--goldd);border-radius:var(--rad);padding:20px;margin-bottom:28px;background:linear-gradient(180deg,rgba(207,176,83,.03),var(--navy))}
+.yo-sueno-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.yo-sueno-lbl{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600}
+.yo-edit-btn{background:none;border:none;color:var(--dim);font-family:var(--sn);font-size:13px;cursor:pointer;text-decoration:underline;font-weight:400}
+.yo-sueno-texto{font-family:var(--sf);font-size:19px;font-style:italic;color:var(--cream);line-height:1.4;font-weight:500}
+/* accesos */
+.yo-accesos{display:flex;flex-direction:column;gap:10px}
+.yo-acceso{display:flex;align-items:center;gap:16px;width:100%;text-align:left;background:var(--navy);border:1px solid var(--border-soft);border-radius:var(--rad);padding:18px 20px;cursor:pointer;transition:border-color .3s;color:var(--text)}
+.yo-acceso:hover{border-color:var(--goldd)}
+.yo-acceso-ico{color:var(--gold);flex-shrink:0;display:flex}
+.yo-acceso-texto{flex:1;min-width:0}
+.yo-acceso-nom{font-family:var(--sf);font-size:18px;color:var(--cream);font-weight:600;display:block;line-height:1.2}
+.yo-acceso-desc{font-size:13.5px;color:var(--dim);font-weight:300}
+/* subir plan */
+.yo-planes{display:flex;flex-direction:column;gap:14px}
+.yo-plan-card{border:1px solid var(--goldd);border-radius:var(--rad);padding:24px;background:var(--navy)}
+.yo-plan-nom{font-family:var(--sf);font-size:22px;color:var(--cream);font-weight:600;margin-bottom:6px}
+.yo-plan-desc{font-size:15px;color:var(--dim);font-weight:300;margin-bottom:18px;line-height:1.5}
+
+/* ============ EL LIBRO ============ */
+.volver-link{display:inline-flex;align-items:center;gap:8px;background:none;border:none;color:var(--gold);font-family:var(--sn);font-size:13px;font-weight:600;cursor:pointer;margin-bottom:20px;letter-spacing:.5px}
+.volver-link svg{transform:rotate(180deg)}
+.libro-indice{display:flex;flex-direction:column}
+.libro-cap-item{display:flex;align-items:center;gap:16px;width:100%;text-align:left;background:none;border:none;border-bottom:1px solid var(--border-soft);padding:20px 2px;cursor:pointer;color:var(--text)}
+.libro-cap-item svg{color:var(--faint);flex-shrink:0}
+.libro-cap-n{font-family:var(--sf);font-size:22px;color:var(--gold);font-weight:600;width:28px;flex-shrink:0}
+.libro-cap-nom{flex:1;font-family:var(--sf);font-size:19px;color:var(--cream);font-weight:500;line-height:1.25}
+.libro-cap-titulo{font-family:var(--sf);font-size:clamp(28px,7vw,40px);color:var(--cream);font-weight:600;line-height:1.1;margin-bottom:28px}
+.libro-prosa p{font-size:17px;line-height:1.8;color:var(--text);font-weight:300;margin-bottom:20px}
+.libro-prosa p:first-child::first-letter{font-family:var(--sf);font-size:56px;float:left;line-height:.85;padding:4px 12px 0 0;color:var(--gold-lt);font-weight:600}
+.libro-nav{display:flex;gap:12px;margin-top:36px;padding-top:24px;border-top:1px solid var(--border-soft)}
+
+/* Admin - mensajes de clientes */
+.admin-msgs{display:flex;flex-direction:column;gap:12px}
+.admin-msg-item{border:1px solid var(--border-soft);border-radius:var(--rad);padding:18px 20px;background:var(--navy)}
+.admin-msg-item.es-plan{border-color:var(--goldd);background:linear-gradient(180deg,rgba(207,176,83,.05),var(--navy))}
+.admin-msg-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.admin-msg-tipo{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-weight:600}
+.admin-msg-fecha{font-size:12px;color:var(--faint)}
+.admin-msg-texto{font-size:15.5px;color:var(--text);line-height:1.6;font-weight:300}
