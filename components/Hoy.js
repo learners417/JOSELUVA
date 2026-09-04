@@ -1,6 +1,7 @@
 "use client";
 
 import { SEMANAS, urlClase, claseId } from "../lib/curso";
+import VideoClase from "./VideoClase";
 import {
   proximoPaso,
   semanaActual,
@@ -24,12 +25,11 @@ export default function Hoy({ state, update, goTo }) {
   const n = semanaActual(state);
   const hechas = semanasHechas(state);
 
-  function verClase() {
+  function marcarVista() {
     // marca la clase como vista al abrir el video
     const id = claseId(paso.semana, paso.claseIdx);
     const vistas = state.clasesVistas || [];
     if (!vistas.includes(id)) update({ clasesVistas: [...vistas, id] });
-    window.open(urlClase(paso.clase.categoryId), "_blank", "noopener");
   }
 
   return (
@@ -67,12 +67,15 @@ export default function Hoy({ state, update, goTo }) {
           </div>
           <div className="paso-titulo">{paso.clase.titulo}</div>
           <p className="paso-detalle">
-            Ve la clase en tu portal. Cuando termines, vuelve aquí para el
-            siguiente paso.
+            {paso.clase.pdfId
+              ? "Lee la guía aquí. Cuando termines, vuelve para el siguiente paso."
+              : paso.clase.videoId
+              ? "Mira la clase aquí. Cuando termines, vuelve para el siguiente paso."
+              : "Ve la clase en tu portal. Cuando termines, vuelve aquí para el siguiente paso."}
           </p>
-          <button className="btn btn-g" onClick={verClase}>
-            <Icono name="flecha" size={18} /> Ver la clase
-          </button>
+          <div onClick={marcarVista}>
+            <VideoClase clase={paso.clase} urlGhl={urlClase(paso.clase.categoryId)} />
+          </div>
         </div>
       )}
 

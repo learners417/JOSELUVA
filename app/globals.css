@@ -725,3 +725,24 @@ select.input { appearance: none; -webkit-appearance: none; background-image: url
 .admin-msg-tipo{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-weight:600}
 .admin-msg-fecha{font-size:12px;color:var(--faint)}
 .admin-msg-texto{font-size:15.5px;color:var(--text);line-height:1.6;font-weight:300}
+
+/* ============ VIDEO DE LA CLASE ============ */
+.video-clase{width:100%}
+.video-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:var(--rad);overflow:hidden;border:1px solid var(--border-soft)}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+.video-poster{position:relative;width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,var(--navy),var(--midnight));border:1px solid var(--goldd);border-radius:var(--rad);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:border-color .3s}
+.video-poster:hover{border-color:var(--gold)}
+.video-play{width:64px;height:64px;border-radius:50%;background:var(--gold);color:var(--midnight);display:flex;align-items:center;justify-content:center}
+.video-play svg{width:28px;height:28px;margin-left:3px}
+.video-poster-txt{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold-lt);font-weight:600}
+
+/* Video inline en el mapa del camino */
+.clase-row-wrap{display:flex;flex-direction:column}
+.clase-video{padding:12px 0 8px 34px;animation:fadeUp .3s ease both}
+
+/* Visor de PDF (guías de Comunicación Ontológica) */
+.pdf-frame{position:relative;width:100%;aspect-ratio:3/4;max-height:80vh;background:#fff;border-radius:var(--rad);overflow:hidden;border:1px solid var(--border-soft)}
+.pdf-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+.pdf-poster{aspect-ratio:16/9}
+.pdf-play{background:transparent;border:1px solid var(--gold);color:var(--gold)}
+.pdf-play svg{width:26px;height:26px;margin:0}

@@ -9,6 +9,7 @@ import {
   SEMANAS_RUEDA,
 } from "../lib/progreso";
 import Icono from "../lib/iconos";
+import VideoClase from "./VideoClase";
 
 // ============================================================
 // EL CAMINO - el mapa completo de las doce semanas.
@@ -20,6 +21,7 @@ import Icono from "../lib/iconos";
 export default function Camino({ state, update }) {
   const actual = semanaActual(state);
   const [abierta, setAbierta] = useState(actual);
+  const [videoAbierto, setVideoAbierto] = useState(null);
   const vistas = state.clasesVistas || [];
 
   function toggleVista(semanaN, idx, e) {
@@ -98,28 +100,47 @@ export default function Camino({ state, update }) {
                     const id = claseId(w.n, i);
                     const vista = vistas.includes(id);
                     return (
-                      <div key={i} className="clase-row">
-                        <button
-                          className={"clase-check" + (vista ? " cc-on" : "")}
-                          onClick={(e) => toggleVista(w.n, i, e)}
-                          aria-label="Marcar como vista"
-                        >
-                          {vista && <Icono name="check" size={13} />}
-                        </button>
-                        <div className="clase-info">
-                          <div className="clase-titulo">{c.titulo}</div>
+                      <div key={i} className="clase-row-wrap">
+                        <div className="clase-row">
+                          <button
+                            className={"clase-check" + (vista ? " cc-on" : "")}
+                            onClick={(e) => toggleVista(w.n, i, e)}
+                            aria-label="Marcar como vista"
+                          >
+                            {vista && <Icono name="check" size={13} />}
+                          </button>
+                          <div className="clase-info">
+                            <div className="clase-titulo">{c.titulo}</div>
+                          </div>
+                          {c.videoId || c.pdfId ? (
+                            <button
+                              className="clase-ver"
+                              onClick={() => {
+                                setVideoAbierto(videoAbierto === id ? null : id);
+                                if (!vista) toggleVista(w.n, i, { stopPropagation() {} });
+                              }}
+                            >
+                              {videoAbierto === id ? "Cerrar" : c.pdfId ? "Ver guía" : "Ver clase"}
+                            </button>
+                          ) : (
+                            <a
+                              className="clase-ver"
+                              href={urlClase(c.categoryId)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={() => {
+                                if (!vista) toggleVista(w.n, i, { stopPropagation() {} });
+                              }}
+                            >
+                              Ver clase
+                            </a>
+                          )}
                         </div>
-                        <a
-                          className="clase-ver"
-                          href={urlClase(c.categoryId)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={() => {
-                            if (!vista) toggleVista(w.n, i, { stopPropagation() {} });
-                          }}
-                        >
-                          Ver clase
-                        </a>
+                        {(c.videoId || c.pdfId) && videoAbierto === id && (
+                          <div className="clase-video">
+                            <VideoClase clase={c} urlGhl={urlClase(c.categoryId)} />
+                          </div>
+                        )}
                       </div>
                     );
                   })}
