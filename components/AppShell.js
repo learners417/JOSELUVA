@@ -15,9 +15,9 @@ import Libro from "./Libro";
 const NAV = [
   { key: "hoy", lbl: "Hoy", ico: "sun" },
   { key: "camino", lbl: "Camino", ico: "map" },
+  { key: "libro", lbl: "Libro", ico: "book" },
   { key: "diario", lbl: "Bitácora", ico: "building" },
-  { key: "valle", lbl: T.nav.valle, ico: "chat" },
-  { key: "yo", lbl: "Yo", ico: "user" },
+  { key: "valle", lbl: T.nav.valle, ico: "compass" },
 ];
 
 function Icon({ name }) {
@@ -45,6 +45,18 @@ function Icon({ name }) {
         <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
       </>
     ),
+    book: (
+      <>
+        <path d="M4 5v14l7-2 7 2V5l-7 2-7-2z" />
+        <path d="M11 5v14" />
+      </>
+    ),
+    compass: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M15.5 8.5l-2.3 5.2-5.2 2.3 2.3-5.2 5.2-2.3z" />
+      </>
+    ),
     user: (
       <>
         <circle cx="12" cy="9" r="4" />
@@ -64,6 +76,23 @@ export default function AppShell({ state, update, onReset }) {
 
   return (
     <div className="app-root">
+      <header className="app-header">
+        <span className="app-header-marca">Serena Ambición</span>
+        <button
+          className={"app-perfil" + (tab === "yo" ? " activo" : "")}
+          onClick={() => setTab("yo")}
+          aria-label="Tu espacio"
+        >
+          {state.foto ? (
+            <img src={state.foto} alt="Tu perfil" />
+          ) : (
+            <span className="app-perfil-ph">
+              {(state.onboarding?.nombre?.[0] || "?").toUpperCase()}
+            </span>
+          )}
+        </button>
+      </header>
+
       {tab === "hoy" && <Hoy state={state} update={update} goTo={setTab} />}
       {tab === "camino" && <Camino state={state} update={update} />}
       {tab === "rueda" && <RuedaVida state={state} update={update} goTo={setTab} />}
@@ -71,7 +100,7 @@ export default function AppShell({ state, update, onReset }) {
       {tab === "valle" && <Valle state={state} update={update} />}
       {tab === "alto" && <Alto state={state} update={update} />}
       {tab === "yo" && <Yo state={state} update={update} goTo={setTab} />}
-      {tab === "libro" && <Libro onVolver={() => setTab("yo")} />}
+      {tab === "libro" && <Libro />}
 
       <nav className="bottomnav">
         {NAV.map((n) => (

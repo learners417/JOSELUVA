@@ -110,8 +110,8 @@ export default function Valle({ state, update }) {
 
   return (
     <div className="screen">
-      <div className="eyebrow">{T.valle.titulo}</div>
-      <h1 className="screen-title">Valle</h1>
+      <div className="eyebrow">Tu acompañante</div>
+      <h1 className="screen-title">Brújula</h1>
       <p className="screen-sub">{T.valle.sub}</p>
 
       <div className="chat-win" ref={winRef}>
@@ -121,7 +121,7 @@ export default function Valle({ state, update }) {
             className={"msg " + (m.role === "assistant" ? "msg-ai" : "msg-me")}
           >
             <div className="msg-name">
-              {m.role === "assistant" ? "Valle" : "Tu"}
+              {m.role === "assistant" ? "Brújula" : "Tú"}
             </div>
             <div dangerouslySetInnerHTML={{ __html: fmt(m.content) }} />
           </div>
@@ -180,7 +180,7 @@ export default function Valle({ state, update }) {
         </button>
       )}
 
-      <p className="foot-note">Valle &middot; la voz de {T.autor}</p>
+      <p className="foot-note">Brújula &middot; la voz de {T.autor}</p>
     </div>
   );
 }

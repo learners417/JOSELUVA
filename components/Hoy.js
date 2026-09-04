@@ -123,7 +123,7 @@ export default function Hoy({ state, update, goTo }) {
       {/* El sueño, siempre presente como norte */}
       {sueno && paso.tipo !== "fin" && (
         <div className="hoy-sueno">
-          <span className="hoy-sueno-lbl">Hacia esto caminas</span>
+          <span className="hoy-sueno-lbl">Tu dirección</span>
           <p className="hoy-sueno-texto">{sueno}</p>
         </div>
       )}

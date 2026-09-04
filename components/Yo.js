@@ -89,14 +89,6 @@ export default function Yo({ state, update, goTo }) {
 
       {/* Accesos */}
       <div className="yo-accesos">
-        <button className="yo-acceso" onClick={() => goTo("libro")}>
-          <span className="yo-acceso-ico"><Icono name="libro" size={20} /></span>
-          <span className="yo-acceso-texto">
-            <span className="yo-acceso-nom">El libro</span>
-            <span className="yo-acceso-desc">Serena Ambición, completo</span>
-          </span>
-          <Icono name="flecha" size={14} />
-        </button>
         <button className="yo-acceso" onClick={() => goTo("alto")}>
           <span className="yo-acceso-ico"><Icono name="pause" size={20} /></span>
           <span className="yo-acceso-texto">

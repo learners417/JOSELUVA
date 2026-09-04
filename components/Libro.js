@@ -10,7 +10,7 @@ import Icono from "../lib/iconos";
 // La voz de Jose, siempre a mano.
 // ============================================================
 
-export default function Libro({ onVolver }) {
+export default function Libro() {
   const [cap, setCap] = useState(null);
 
   if (cap !== null) {
@@ -47,20 +47,19 @@ export default function Libro({ onVolver }) {
 
   return (
     <div className="screen">
-      {onVolver && (
-        <button className="volver-link" onClick={onVolver}>
-          <Icono name="flecha" size={14} /> Volver
-        </button>
-      )}
       <div className="eyebrow">El libro</div>
       <h1 className="screen-title">
         Serena <em>Ambición</em>
       </h1>
       <p className="screen-sub">
-        Tu reinvención en la segunda mitad de la vida. El libro completo de José
-        Luis, para leer a tu ritmo — el mismo camino que recorres aquí, en sus
-        palabras.
+        Del éxito al sentido. El libro completo de José Luis, para leer a tu
+        ritmo — el mismo camino que recorres aquí, en sus palabras.
       </p>
+
+      <div className="libro-epigrafe">
+        «Lo que nos enferma no es el dolor, sino vivir una vida que no es la
+        nuestra.»
+      </div>
 
       <div className="libro-indice">
         {LIBRO.map((c) => (
