@@ -110,8 +110,8 @@ export default function Yo({ state, update, goTo }) {
         <button className="yo-acceso" onClick={() => setVista("soporte")}>
           <span className="yo-acceso-ico"><Icono name="chat" size={20} /></span>
           <span className="yo-acceso-texto">
-            <span className="yo-acceso-nom">Escribir a José</span>
-            <span className="yo-acceso-desc">Una consulta, un pedido, lo que necesites</span>
+            <span className="yo-acceso-nom">Escribir a José Luis</span>
+            <span className="yo-acceso-desc">Para lo importante de tu proceso. Él te responde</span>
           </span>
           <Icono name="flecha" size={14} />
         </button>
@@ -187,24 +187,47 @@ function SubirPlan({ state, update, onVolver }) {
 // --- Soporte: mensaje que llega a José en admin ---
 function Soporte({ state, update, onVolver }) {
   const [texto, setTexto] = useState("");
+  const [contacto, setContacto] = useState("");
   const [enviado, setEnviado] = useState(false);
+  const [enviando, setEnviando] = useState(false);
 
-  function enviar() {
-    if (texto.trim().length < 3) return;
-    const msgs = state.soporteMensajes || [];
+  // URL del webhook de GHL — José la crea en Automation → Inbound Webhook.
+  // Cuando esté, pegar aquí. GHL dispara el mail a soy.joseluva@gmail.com.
+  const WEBHOOK_JOSE =
+    "https://services.leadconnectorhq.com/hooks/m0oQv3eLz3Ewj8PeqgqY/webhook-trigger/e5ee6284-d3ee-447b-85dc-6075feeb6d69";
+
+  const valido = texto.trim().length >= 20 && contacto.trim().length >= 5;
+
+  async function enviar() {
+    if (!valido) return;
+    setEnviando(true);
+    const carga = {
+      de: state.onboarding?.nombre || "Cliente",
+      codigo: state.acceso?.codigo || "",
+      contacto: contacto.trim(),
+      mensaje: texto.trim(),
+      fecha: new Date().toISOString(),
+    };
+    // Envía al webhook de GHL si está configurado.
+    if (WEBHOOK_JOSE) {
+      try {
+        await fetch(WEBHOOK_JOSE, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(carga),
+        });
+      } catch (e) {
+        // Falla silenciosa: igual se guarda abajo como respaldo.
+      }
+    }
+    // Respaldo local (por si el webhook falla o aún no está).
     update({
       soporteMensajes: [
-        ...msgs,
-        {
-          tipo: "consulta",
-          texto: texto.trim(),
-          de: state.onboarding?.nombre || "Cliente",
-          codigo: state.acceso?.codigo || "",
-          fecha: new Date().toISOString(),
-          leido: false,
-        },
+        ...(state.soporteMensajes || []),
+        { tipo: "consulta", texto: carga.mensaje, de: carga.de, contacto: carga.contacto, codigo: carga.codigo, fecha: carga.fecha, leido: false },
       ],
     });
+    setEnviando(false);
     setEnviado(true);
     setTexto("");
   }
@@ -214,19 +237,20 @@ function Soporte({ state, update, onVolver }) {
       <button className="volver-link" onClick={onVolver}>
         <Icono name="flecha" size={14} /> Volver
       </button>
-      <div className="eyebrow">Escribir a José</div>
-      <h1 className="screen-title">¿En qué <em>estás</em>?</h1>
+      <div className="eyebrow">Un mensaje a José Luis Valle Tulián</div>
+      <h1 className="screen-title">Escríbele a <em>José Luis</em></h1>
       <p className="screen-sub">
-        Una consulta, una duda del proceso, un pedido. Tu mensaje le llega
-        directo a José. Te responderá por su vía habitual.
+        Este espacio es para lo que de verdad importa en tu proceso: una
+        pregunta profunda, una decisión que estás tomando, un pedido concreto.
+        José lo lee personalmente y te responde a tu contacto.
       </p>
 
       {enviado ? (
         <div className="card card-gold">
           <div className="chip">Mensaje enviado</div>
           <p className="body-p">
-            José recibió tu mensaje. Te responderá pronto. Mientras tanto, sigue
-            tu camino con tranquilidad.
+            José Luis recibió tu mensaje. Te responderá a tu WhatsApp o correo.
+            Sigue tu camino con tranquilidad.
           </p>
         </div>
       ) : (
@@ -234,12 +258,24 @@ function Soporte({ state, update, onVolver }) {
           <textarea
             className="textarea"
             value={texto}
-            placeholder="Escribe aquí lo que necesites..."
+            placeholder="Escribe tu consulta con detalle..."
             onChange={(e) => setTexto(e.target.value)}
-            style={{ minHeight: 140, marginBottom: 16 }}
+            style={{ minHeight: 140, marginBottom: 6 }}
           />
-          <button className="btn btn-g" onClick={enviar} disabled={texto.trim().length < 3}>
-            Enviar a José
+          {texto.trim().length > 0 && texto.trim().length < 20 && (
+            <div className="bita-min" style={{ marginBottom: 12 }}>
+              Te faltan {20 - texto.trim().length} caracteres.
+            </div>
+          )}
+          <input
+            className="input"
+            value={contacto}
+            placeholder="Tu WhatsApp o correo (para que José te responda)"
+            onChange={(e) => setContacto(e.target.value)}
+            style={{ marginBottom: 16 }}
+          />
+          <button className="btn btn-g" onClick={enviar} disabled={!valido || enviando}>
+            {enviando ? "Enviando…" : "Enviar a José Luis"}
           </button>
         </>
       )}

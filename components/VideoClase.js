@@ -49,7 +49,7 @@ export default function VideoClase({ clase, urlGhl }) {
                 <path d="M11 5v14" />
               </svg>
             </span>
-            <span className="video-poster-txt">Abrir la guía</span>
+            <span className="video-poster-txt">Abrir la ruta</span>
           </button>
         )}
       </div>

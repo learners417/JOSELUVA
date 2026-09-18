@@ -34,7 +34,7 @@ programas = leer("lib/programas.js")
 check("Programas: 3 niveles", "autoguiado" in programas and "coaching" in programas and "mentoria" in programas)
 
 # Pantallas nuevas
-check("HOY (pantalla guia)", "proximoPaso" in leer("components/Hoy.js"))
+check("HOY (pantalla guia)", "semanaActual" in leer("components/Hoy.js"))
 check("CAMINO (mapa con bloqueo)", "semanaDesbloqueada" in leer("components/Camino.js"))
 check("BITACORA (matriz + historial)", "HistorialBitacora" in leer("components/Diario.js"))
 check("RUEDA (evolucion + cierre)", "rueda-evol" in leer("components/RuedaVida.js"))
@@ -65,6 +65,27 @@ check("NAV: 5 tabs (Hoy/Camino/Bitacora/Valle/Yo)", shell.count('key: "') == 5)
 # Sin restos del avatar viejo
 sin_viejo = not any(os.path.exists(f"components/{c}.js") for c in ["Obra","Plano","Mesa","Ritual","Diagnostico","Mas","Agenda"])
 check("Limpio: sin componentes del avatar viejo", sin_viejo)
+
+
+# --- Cambios 16 sep 2026 ---
+prog = leer("lib/progreso.js")
+check("Motor de días (ritmo fijo)", "semanaPorFecha" in prog and "diasDesdeIngreso" in prog)
+curso = leer("lib/curso.js")
+check("Tipos de ruta (Activación/Práctica/Podcast/Clase)", "TIPO_RUTA" in curso and "Activación" in curso)
+camino = leer("components/Camino.js")
+check("Camino: edificio + checks diario/único", "camino-edificio" in camino and "check-diario" in camino and "check-unico" in camino)
+hoy = leer("components/Hoy.js")
+check("Hoy: un solo paso por semana", "Ir a mi semana" in hoy and "diaDeLaSemana" in hoy)
+diario = leer("components/Diario.js")
+check("Bitácora: mínimo de caracteres con aviso", "Te faltan" in diario and "MIN = 20" in diario)
+check("Bitácora: cards con ícono", "bita-icono" in diario and "ICONO_RUTA" in diario)
+yo = leer("components/Yo.js")
+check("Escribir a José: contacto + webhook", "WEBHOOK_JOSE" in yo and "contacto" in yo)
+check("Escribir a José: más entidad", "José Luis Valle Tulián" in yo)
+login = leer("components/Login.js")
+check("Login: bienvenida (sin nicho)", "Bienvenido a Serena" in login)
+video = leer("components/VideoClase.js")
+check("PDF dice Ruta", "Abrir la ruta" in video)
 
 print("="*52)
 print(f"  {oks} OK / {fails} FAIL")

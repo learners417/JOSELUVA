@@ -7,6 +7,17 @@ import { preguntasSemana } from "../lib/bitacora";
 import { rutasIncluidas } from "../lib/programas";
 import Icono from "../lib/iconos";
 
+// Icono por ruta (usa la iconografia existente, sin emojis).
+const ICONO_RUTA = {
+  biocuantico: "alto",       // Activación → pausa/energía
+  biohacking: "reloj",       // Práctica → cuerpo/tiempo
+  mindfulness: "dialogo",    // Podcast → escucha
+  neurociencias: "medir",    // Clase → conocimiento
+  comunicacion: "legado",    // Ruta → comunicación/vínculo
+  coaching: "brujula",
+  mentoria: "brujula",
+};
+
 // ============================================================
 // LA BITACORA - fiel al proceso real de Jose (Excel oficial).
 // Muestra solo las rutas incluidas en el PROGRAMA del cliente
@@ -29,14 +40,17 @@ export default function Diario({ state, update }) {
   const guardadas = (state.bitacoraRespuestas || {})[actual] || {};
   const [respuestas, setRespuestas] = useState(guardadas);
 
+  // Minimo de caracteres por respuesta para que cuente como completa.
+  const MIN = 20;
+
   function setResp(ruta, idx, val) {
     const key = ruta + "-" + idx;
     setRespuestas((r) => ({ ...r, [key]: val }));
   }
 
-  // Cuantas respondio (con algo de texto)
+  // Cuantas respondio (con texto suficiente)
   const respondidas = preguntas.filter(
-    (p, i) => (respuestas[p.ruta + "-" + i] || "").trim().length > 2
+    (p, i) => (respuestas[p.ruta + "-" + i] || "").trim().length >= MIN
   ).length;
   const completa = respondidas === preguntas.length && preguntas.length > 0;
 
@@ -96,20 +110,39 @@ export default function Diario({ state, update }) {
         {preguntas.map((p, i) => {
           const key = p.ruta + "-" + i;
           const val = respuestas[key] || "";
-          const lista = val.trim().length > 2;
+          const largo = val.trim().length;
+          const lista = largo >= MIN;
+          const faltan = MIN - largo;
+          const icono = ICONO_RUTA[p.ruta] || "libro";
           return (
-            <div key={key} className={"bita-item" + (lista ? " bi-on" : "")}>
-              <div className="bita-ruta">
-                <span className="bita-ruta-nombre">{p.nombre}</span>
-                {p.etiqueta && <span className="bita-ruta-tag">{p.etiqueta}</span>}
+            <div key={key} className={"bita-card" + (lista ? " bc-on" : "")}>
+              <div className="bita-card-top">
+                <span className={"bita-icono ruta-" + p.ruta}>
+                  <Icono name={icono} size={20} />
+                </span>
+                <div className="bita-card-head">
+                  <span className="bita-ruta-nombre">{p.nombre}</span>
+                  {p.etiqueta && <span className="bita-ruta-tag">{p.etiqueta}</span>}
+                </div>
+                {lista && (
+                  <span className="bita-listo"><Icono name="check" size={14} /></span>
+                )}
               </div>
               <p className="bita-pregunta">{p.pregunta}</p>
               <textarea
                 className="textarea bita-ta"
                 value={val}
-                placeholder="Tu insight / reflexión..."
+                placeholder="Escribe lo que de verdad notaste..."
                 onChange={(e) => setResp(p.ruta, i, e.target.value)}
               />
+              {/* Aviso claro del mínimo — para que no parezca un error */}
+              {!lista && (
+                <div className="bita-min">
+                  {largo === 0
+                    ? `Escribe al menos ${MIN} caracteres para guardar.`
+                    : `Te faltan ${faltan} caracteres para guardar.`}
+                </div>
+              )}
             </div>
           );
         })}

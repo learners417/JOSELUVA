@@ -757,3 +757,49 @@ select.input { appearance: none; -webkit-appearance: none; background-image: url
 
 /* Libro - epígrafe editorial */
 .libro-epigrafe{font-family:var(--sf);font-style:italic;font-size:clamp(19px,4.5vw,24px);color:var(--gold-lt);line-height:1.4;padding:24px 0 28px;margin-bottom:20px;border-bottom:1px solid var(--border-soft);font-weight:500}
+
+/* ============ CAMINO — edificio arriba ============ */
+.camino-edificio{display:flex;align-items:center;gap:20px;padding:20px 0 24px;margin-bottom:20px;border-bottom:1px solid var(--border-soft)}
+.camino-edificio-n{font-family:var(--sf);font-size:32px;color:var(--gold-lt);font-weight:600;line-height:1}
+.camino-edificio-de{font-size:15px;color:var(--dim);font-weight:300}
+
+/* ============ CAMINO — cards de clase separadas ============ */
+.clase-card{border:1px solid var(--border-soft);border-radius:var(--rad);padding:18px 18px;margin-bottom:12px;background:var(--navy)}
+.clase-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.clase-tipo{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;padding:5px 12px;border-radius:100px;border:1px solid var(--goldd);color:var(--gold-lt)}
+/* color semántico sutil por ruta (sin brillos) */
+.tipo-biocuantico{color:#C9A9D4;border-color:rgba(201,169,212,.35)}
+.tipo-biohacking{color:#9FC4A8;border-color:rgba(159,196,168,.35)}
+.tipo-mindfulness{color:#A8C2D9;border-color:rgba(168,194,217,.35)}
+.tipo-neurociencias{color:var(--gold-lt);border-color:var(--goldd)}
+.tipo-comunicacion{color:#D4B98A;border-color:rgba(212,185,138,.35)}
+.clase-veces{font-size:12px;color:var(--faint);font-weight:400}
+.clase-card-titulo{font-family:var(--sf);font-size:20px;color:var(--cream);font-weight:600;line-height:1.2;margin-bottom:14px}
+.clase-card-acciones{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.clase-ver{font-family:var(--sn);font-size:13px;letter-spacing:.5px;font-weight:600;color:var(--gold);background:transparent;border:1px solid var(--goldd);border-radius:100px;padding:10px 18px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px}
+.clase-ver:hover{background:var(--goldg)}
+/* check diario (prácticas) — verde semántico */
+.check-diario{font-family:var(--sn);font-size:13px;font-weight:600;color:var(--dim);background:transparent;border:1px solid var(--border-soft);border-radius:100px;padding:10px 16px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.check-diario.cd-on{color:#8FBF95;border-color:rgba(143,191,149,.5);background:rgba(143,191,149,.08)}
+/* check único (clase/ruta) */
+.check-unico{font-family:var(--sn);font-size:13px;font-weight:600;color:var(--dim);background:transparent;border:1px solid var(--border-soft);border-radius:100px;padding:10px 16px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.check-unico.cu-on{color:var(--gold-lt);border-color:var(--goldd);background:var(--goldg)}
+.clase-video{margin-top:14px}
+
+/* ============ BITÁCORA — cards con ícono ============ */
+.bita-card{border:1px solid var(--border-soft);border-radius:var(--rad);padding:20px;margin-bottom:16px;background:var(--navy);transition:border-color .3s}
+.bita-card.bc-on{border-color:rgba(143,191,149,.4);background:rgba(143,191,149,.04)}
+.bita-card-top{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.bita-icono{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--gold-lt);background:var(--goldg);border:1px solid var(--goldd)}
+.bita-icono.ruta-biocuantico{color:#C9A9D4;border-color:rgba(201,169,212,.3);background:rgba(201,169,212,.06)}
+.bita-icono.ruta-biohacking{color:#9FC4A8;border-color:rgba(159,196,168,.3);background:rgba(159,196,168,.06)}
+.bita-icono.ruta-mindfulness{color:#A8C2D9;border-color:rgba(168,194,217,.3);background:rgba(168,194,217,.06)}
+.bita-icono.ruta-neurociencias{color:var(--gold-lt);border-color:var(--goldd);background:var(--goldg)}
+.bita-icono.ruta-comunicacion{color:#D4B98A;border-color:rgba(212,185,138,.3);background:rgba(212,185,138,.06)}
+.bita-card-head{flex:1;min-width:0}
+.bita-card .bita-ruta-nombre{font-family:var(--sf);font-size:19px;color:var(--cream);font-weight:600;display:block;line-height:1.15}
+.bita-card .bita-ruta-tag{font-size:12px;color:var(--faint);font-weight:300}
+.bita-listo{color:#8FBF95;flex-shrink:0}
+.bita-card .bita-pregunta{font-size:15.5px;color:var(--dim);font-style:italic;line-height:1.5;margin-bottom:12px}
+.bita-card .bita-ta{min-height:100px}
+.bita-min{margin-top:8px;font-size:13.5px;color:var(--gold-deep);font-weight:400}

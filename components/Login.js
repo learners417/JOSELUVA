@@ -18,7 +18,7 @@ export default function Login({ onAccess, onDemo }) {
     <div className="center-screen">
       <div className="brand-badge">
         <span className="dot" />
-        {MARCA.avatar}
+        Bienvenido a Serena Ambición
       </div>
       <h1 className="hero-title">
         Serena

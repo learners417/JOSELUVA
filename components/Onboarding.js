@@ -118,7 +118,7 @@ export default function Onboarding({ onDone }) {
           <p className="body-p" style={{ margin: "24px 0 8px" }}>
             No vas a hacerlo solo. Cada semana trabaja una capa: el cuerpo, el
             diseño, la presencia, el cambio, las conversaciones que faltan. Todo
-            apunta a lo mismo: que salgas con la forma de ver y de decidir que
+            apunta a lo mismo: que salgas con la forma de ver y de decidir lo que
             este momento de tu vida te pide.
           </p>
           <button

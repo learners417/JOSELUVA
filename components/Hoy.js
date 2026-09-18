@@ -1,115 +1,136 @@
 "use client";
 
-import { SEMANAS, urlClase, claseId } from "../lib/curso";
-import VideoClase from "./VideoClase";
+import { SEMANAS } from "../lib/curso";
 import {
-  proximoPaso,
   semanaActual,
+  semanaCompleta,
+  esperandoProximaSemana,
+  diaDeLaSemana,
   semanasHechas,
   SEMANAS_RUEDA,
 } from "../lib/progreso";
-import Edificio from "./Edificio";
 import Icono from "../lib/iconos";
 
 // ============================================================
-// HOY - la pantalla que te lleva de la mano.
-// Te dice UNA cosa: que hacer ahora. El proximo paso, claro,
-// con su boton. Nada de menus. Siempre sabes por donde seguir.
-// Modelo Sol Peirano / TCD, en la voz de Jose.
+// HOY - una sola cosa: lo que te toca esta semana.
+// Un solo boton de salida, segun el momento del programa.
+// El mapa y el edificio viven en el Camino (no aca).
+// El ritmo lo marca el calendario: 7 dias = 1 semana.
 // ============================================================
 
 export default function Hoy({ state, update, goTo }) {
   const nombre = (state.onboarding?.nombre || "").split(" ")[0];
   const sueno = state.onboarding?.sueno || "";
-  const paso = proximoPaso(state);
   const n = semanaActual(state);
+  const w = SEMANAS.find((s) => s.n === n);
   const hechas = semanasHechas(state);
+  const dia = diaDeLaSemana(state);
+  const completaTodo = hechas >= SEMANAS.length;
+  const esperando = esperandoProximaSemana(state);
 
-  function marcarVista() {
-    // marca la clase como vista al abrir el video
-    const id = claseId(paso.semana, paso.claseIdx);
-    const vistas = state.clasesVistas || [];
-    if (!vistas.includes(id)) update({ clasesVistas: [...vistas, id] });
+  // Que le falta a la semana actual, en orden.
+  const ruedaPendiente =
+    SEMANAS_RUEDA.includes(n) && !(state.ruedaTramos || {})[n];
+  const bitacoraPendiente = !(state.bitacoraSemanas || []).includes(n);
+
+  // Decidir el UNICO paso de hoy.
+  let paso;
+  if (completaTodo) {
+    paso = { tipo: "fin" };
+  } else if (esperando) {
+    paso = { tipo: "espera" };
+  } else if (ruedaPendiente) {
+    paso = { tipo: "rueda" };
+  } else {
+    // La semana tiene sus clases/practicas en el Camino; desde Hoy se entra ahi.
+    // Cuando ya vio todo, el paso es la actividad (bitacora).
+    paso = bitacoraPendiente ? { tipo: "semana" } : { tipo: "actividad" };
   }
 
   return (
     <div className="screen">
       <div className="eyebrow">Hoy</div>
 
-      {/* Saludo breve + dónde estás */}
       <h1 className="screen-title">
         {paso.tipo === "fin" ? (
           <>Lo <em>completaste</em>.</>
         ) : (
           <>
-            Semana {paso.semana}
-            <span className="hoy-sub-titulo"> · {paso.subtitulo}</span>
+            Semana {n}
+            <span className="hoy-sub-titulo"> · {w?.subtitulo}</span>
           </>
         )}
       </h1>
 
-      {/* LA TARJETA DEL PASO - lo único que importa ahora */}
+      {/* Rueda de este tramo */}
       {paso.tipo === "rueda" && (
         <div className="paso-card paso-rueda">
-          <div className="paso-lbl">Tu siguiente paso</div>
-          <div className="paso-titulo">{paso.titulo}</div>
-          <p className="paso-detalle">{paso.detalle}</p>
+          <div className="paso-lbl">Tu paso de esta semana</div>
+          <div className="paso-titulo">
+            {n === 1 ? "Tu punto de partida" : "Vuelve a mirar tu rueda"}
+          </div>
+          <p className="paso-detalle">
+            {n === 1
+              ? "Antes de empezar, una foto honesta de dónde está hoy tu vida."
+              : "Han pasado semanas. Mira cómo cambió tu rueda desde la última vez."}
+          </p>
           <button className="btn btn-g" onClick={() => goTo("rueda")}>
-            {paso.semana === 1 ? "Medir mi punto de partida" : "Volver a medir mi rueda"}
+            {n === 1 ? "Medir mi punto de partida" : "Volver a medir mi rueda"}
           </button>
         </div>
       )}
 
-      {paso.tipo === "clase" && (
+      {/* La semana en marcha: un solo boton al Camino */}
+      {paso.tipo === "semana" && (
         <div className="paso-card">
-          <div className="paso-lbl">
-            Tu siguiente paso · Clase {paso.claseNum} de {paso.totalClases}
-          </div>
-          <div className="paso-titulo">{paso.clase.titulo}</div>
+          <div className="paso-lbl">Tu semana · día {dia} de 7</div>
+          <div className="paso-titulo">Lo que trabajas esta semana</div>
           <p className="paso-detalle">
-            {paso.clase.pdfId
-              ? "Lee la guía aquí. Cuando termines, vuelve para el siguiente paso."
-              : paso.clase.videoId
-              ? "Mira la clase aquí. Cuando termines, vuelve para el siguiente paso."
-              : "Ve la clase en tu portal. Cuando termines, vuelve aquí para el siguiente paso."}
+            Cada semana trabaja una capa. Entra al camino y haz las prácticas y
+            la clase de esta semana. Las prácticas son para repetir cada día.
           </p>
-          <div onClick={marcarVista}>
-            <VideoClase clase={paso.clase} urlGhl={urlClase(paso.clase.categoryId)} />
-          </div>
+          <button className="btn btn-g" onClick={() => goTo("camino")}>
+            Ir a mi semana
+          </button>
         </div>
       )}
 
+      {/* Vio todo, falta bajar la bitacora */}
       {paso.tipo === "actividad" && (
         <div className="paso-card paso-actividad">
-          <div className="paso-lbl">Tu siguiente paso · La actividad</div>
-          <div className="paso-titulo">{paso.titulo}</div>
+          <div className="paso-lbl">Tu paso de esta semana · La bitácora</div>
+          <div className="paso-titulo">Baja lo que te llevas</div>
           <p className="paso-detalle">
-            Ya viste las clases de esta semana. Ahora baja lo que te llevas a tu
-            bitácora. Ahí es donde el curso se vuelve tuyo.
+            Ya recorriste esta semana. Ahora escríbelo en tu bitácora. Ahí es
+            donde el proceso se vuelve tuyo.
           </p>
           <button className="btn btn-g" onClick={() => goTo("diario")}>
-            Hacer la actividad
+            Escribir mi bitácora
           </button>
         </div>
       )}
 
-      {paso.tipo === "avanzar" && (
+      {/* Termino la semana, el calendario aun no abre la proxima */}
+      {paso.tipo === "espera" && (
         <div className="paso-card paso-listo">
-          <div className="paso-lbl">Semana {paso.semana} completa</div>
+          <div className="paso-lbl">Semana {n} completa</div>
           <div className="paso-titulo">Cerraste esta semana.</div>
           <p className="paso-detalle">
             El diseño se sostiene cuando cada semana queda de pie antes de la
-            siguiente. La próxima ya está abierta.
+            siguiente. Sigue con tus prácticas diarias; la próxima semana se
+            abre a su tiempo.
           </p>
+          <button className="btn btn-s" onClick={() => goTo("camino")}>
+            Seguir mis prácticas
+          </button>
         </div>
       )}
 
+      {/* Fin del programa */}
       {paso.tipo === "fin" && (
         <div className="paso-card paso-listo">
           <div className="paso-lbl">Las doce semanas</div>
-          <div className="paso-titulo">
-            No eres el mismo que empezó.
-          </div>
+          <div className="paso-titulo">No eres el mismo que empezó.</div>
           <p className="paso-detalle">
             Recorriste el camino entero. Ahora el diseño ya no depende de nadie
             más que de ti.
@@ -127,19 +148,6 @@ export default function Hoy({ state, update, goTo }) {
           <p className="hoy-sueno-texto">{sueno}</p>
         </div>
       )}
-
-      {/* El edificio: avance real por las doce semanas */}
-      <div className="hoy-avance" onClick={() => goTo("camino")}>
-        <Edificio plantas={hechas} total={SEMANAS.length} />
-        <div className="hoy-avance-info">
-          <span className="hoy-avance-n">
-            {hechas} <span className="hoy-avance-de">de 12 semanas</span>
-          </span>
-          <span className="hoy-avance-link">
-            Ver el camino completo <Icono name="flecha" size={14} />
-          </span>
-        </div>
-      </div>
     </div>
   );
 }
