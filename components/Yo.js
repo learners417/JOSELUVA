@@ -209,10 +209,13 @@ function Soporte({ state, update, onVolver }) {
       fecha: new Date().toISOString(),
     };
     // Envía al webhook de GHL si está configurado.
+    // mode:no-cors -> el navegador dispara el POST sin esperar respuesta
+    // (GHL no devuelve cabeceras CORS; sin esto el navegador lo bloquea).
     if (WEBHOOK_JOSE) {
       try {
         await fetch(WEBHOOK_JOSE, {
           method: "POST",
+          mode: "no-cors",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(carga),
         });

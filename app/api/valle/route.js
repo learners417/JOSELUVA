@@ -14,6 +14,7 @@ export const runtime = "edge";
 // acompanamiento que un modelo generico.
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 const MODEL = "claude-haiku-4-5-20251001";
+const MODEL_RESPALDO = "claude-3-5-haiku-20241022"; // estable, por si el otro falla
 
 const SYSTEM = `Eres Brujula, la voz de acompanamiento de Jose Luis Valle Tulian dentro de su app del Metodo Serena Ambicion.
 
@@ -132,25 +133,33 @@ export async function POST(req) {
       });
     }
 
-    const res = await fetch(ANTHROPIC_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-      },
-      signal: controller.signal,
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 400,
-        temperature: 0.75,
-        system: sys, // Claude toma el system prompt en su propio campo.
-        messages: messages, // solo user/assistant, sin el system.
-      }),
-    });
-    clearTimeout(timer);
+    // Llama a la API. Si el modelo principal falla, reintenta con el estable.
+    async function llamar(modelo) {
+      const r = await fetch(ANTHROPIC_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": apiKey,
+          "anthropic-version": "2023-06-01",
+        },
+        signal: controller.signal,
+        body: JSON.stringify({
+          model: modelo,
+          max_tokens: 400,
+          temperature: 0.75,
+          system: sys,
+          messages: messages,
+        }),
+      });
+      return r.json();
+    }
 
-    const data = await res.json();
+    let data = await llamar(MODEL);
+    // Si el modelo principal dio error (nombre invalido, etc.), probar el estable.
+    if (data && data.error) {
+      data = await llamar(MODEL_RESPALDO);
+    }
+    clearTimeout(timer);
     // Claude devuelve el texto en data.content[0].text
     const text =
       data && Array.isArray(data.content) && data.content[0] && data.content[0].text
