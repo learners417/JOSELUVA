@@ -189,50 +189,37 @@ function Soporte({ state, update, onVolver }) {
   const [texto, setTexto] = useState("");
   const [contacto, setContacto] = useState("");
   const [enviado, setEnviado] = useState(false);
-  const [enviando, setEnviando] = useState(false);
 
-  // URL del webhook de GHL — José la crea en Automation → Inbound Webhook.
-  // Cuando esté, pegar aquí. GHL dispara el mail a soy.joseluva@gmail.com.
-  const WEBHOOK_JOSE =
-    "https://services.leadconnectorhq.com/hooks/m0oQv3eLz3Ewj8PeqgqY/webhook-trigger/e5ee6284-d3ee-447b-85dc-6075feeb6d69";
+  // El mail de José. El botón abre el correo del cliente con todo cargado.
+  const MAIL_JOSE = "soy.joseluva@gmail.com";
 
   const valido = texto.trim().length >= 20 && contacto.trim().length >= 5;
 
-  async function enviar() {
+  function enviar() {
     if (!valido) return;
-    setEnviando(true);
-    const carga = {
-      de: state.onboarding?.nombre || "Cliente",
-      codigo: state.acceso?.codigo || "",
-      contacto: contacto.trim(),
-      mensaje: texto.trim(),
-      fecha: new Date().toISOString(),
-    };
-    // Envía al webhook de GHL si está configurado.
-    // mode:no-cors -> el navegador dispara el POST sin esperar respuesta
-    // (GHL no devuelve cabeceras CORS; sin esto el navegador lo bloquea).
-    if (WEBHOOK_JOSE) {
-      try {
-        await fetch(WEBHOOK_JOSE, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(carga),
-        });
-      } catch (e) {
-        // Falla silenciosa: igual se guarda abajo como respaldo.
-      }
-    }
-    // Respaldo local (por si el webhook falla o aún no está).
+    const nombre = state.onboarding?.nombre || "Cliente";
+    const codigo = state.acceso?.codigo || "";
+    const asunto = `Consulta de ${nombre} · Serena Ambición`;
+    const cuerpo =
+      `${texto.trim()}\n\n` +
+      `— — —\n` +
+      `De: ${nombre}\n` +
+      `Mi contacto (para tu respuesta): ${contacto.trim()}\n` +
+      (codigo ? `Código: ${codigo}\n` : "");
+    // Abre el mail del cliente con destinatario, asunto y cuerpo ya escritos.
+    const url =
+      `mailto:${MAIL_JOSE}` +
+      `?subject=${encodeURIComponent(asunto)}` +
+      `&body=${encodeURIComponent(cuerpo)}`;
+    // Guarda una copia local (respaldo) y abre el correo.
     update({
       soporteMensajes: [
         ...(state.soporteMensajes || []),
-        { tipo: "consulta", texto: carga.mensaje, de: carga.de, contacto: carga.contacto, codigo: carga.codigo, fecha: carga.fecha, leido: false },
+        { tipo: "consulta", texto: texto.trim(), de: nombre, contacto: contacto.trim(), codigo, fecha: new Date().toISOString(), leido: false },
       ],
     });
-    setEnviando(false);
+    window.location.href = url;
     setEnviado(true);
-    setTexto("");
   }
 
   return (
@@ -245,15 +232,16 @@ function Soporte({ state, update, onVolver }) {
       <p className="screen-sub">
         Este espacio es para lo que de verdad importa en tu proceso: una
         pregunta profunda, una decisión que estás tomando, un pedido concreto.
-        José lo lee personalmente y te responde a tu contacto.
+        José lo lee personalmente y te responde.
       </p>
 
       {enviado ? (
         <div className="card card-gold">
-          <div className="chip">Mensaje enviado</div>
+          <div className="chip">Ya casi</div>
           <p className="body-p">
-            José Luis recibió tu mensaje. Te responderá a tu WhatsApp o correo.
-            Sigue tu camino con tranquilidad.
+            Se abrió tu correo con el mensaje listo. Solo toca <strong>Enviar</strong>{" "}
+            en tu aplicación de correo y le llegará a José Luis. Él te responderá
+            personalmente.
           </p>
         </div>
       ) : (
@@ -277,8 +265,8 @@ function Soporte({ state, update, onVolver }) {
             onChange={(e) => setContacto(e.target.value)}
             style={{ marginBottom: 16 }}
           />
-          <button className="btn btn-g" onClick={enviar} disabled={!valido || enviando}>
-            {enviando ? "Enviando…" : "Enviar a José Luis"}
+          <button className="btn btn-g" onClick={enviar} disabled={!valido}>
+            Enviar a José Luis
           </button>
         </>
       )}

@@ -168,14 +168,9 @@ export async function POST(req) {
         : null;
 
     if (!text) {
-      // DIAGNOSTICO temporal: muestra la causa real en pantalla.
       const apiErr =
         data && data.error && data.error.message ? data.error.message : "sin_respuesta";
-      return Response.json({
-        reply: "Diagnóstico: " + apiErr,
-        fallback: true,
-        reason: apiErr,
-      });
+      return Response.json({ reply: fallback(), fallback: true, reason: apiErr });
     }
     // Ultimo escudo: sanea cualquier palabra prohibida que se haya colado.
     return Response.json({ reply: sanearLexico(text.trim()), fallback: false });
