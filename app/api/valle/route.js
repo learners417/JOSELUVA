@@ -6,7 +6,8 @@
 
 import { sanearLexico } from "../../../lib/lexico";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 // Llama a Claude (Anthropic) directo desde el servidor de la app.
 // La API key vive en variable de entorno de Vercel: ANTHROPIC_API_KEY.
@@ -167,10 +168,14 @@ export async function POST(req) {
         : null;
 
     if (!text) {
-      // Devuelve la causa real para diagnostico (error de la API, saldo, etc.)
+      // DIAGNOSTICO temporal: muestra la causa real en pantalla.
       const apiErr =
         data && data.error && data.error.message ? data.error.message : "sin_respuesta";
-      return Response.json({ reply: fallback(), fallback: true, reason: apiErr });
+      return Response.json({
+        reply: "Diagnóstico: " + apiErr,
+        fallback: true,
+        reason: apiErr,
+      });
     }
     // Ultimo escudo: sanea cualquier palabra prohibida que se haya colado.
     return Response.json({ reply: sanearLexico(text.trim()), fallback: false });

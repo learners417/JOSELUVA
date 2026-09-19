@@ -803,3 +803,20 @@ select.input { appearance: none; -webkit-appearance: none; background-image: url
 .bita-card .bita-pregunta{font-size:15.5px;color:var(--dim);font-style:italic;line-height:1.5;margin-bottom:12px}
 .bita-card .bita-ta{min-height:100px}
 .bita-min{margin-top:8px;font-size:13.5px;color:var(--gold-deep);font-weight:400}
+
+/* Camino — aviso de rueda primero */
+.rueda-primero{display:flex;gap:14px;align-items:flex-start;padding:20px;border:1px solid var(--goldd);border-radius:var(--rad);background:var(--goldg);color:var(--gold-lt)}
+.rueda-primero-t{font-family:var(--sf);font-size:19px;color:var(--cream);font-weight:600;margin-bottom:6px}
+.rueda-primero-p{font-size:15px;color:var(--dim);line-height:1.5;font-weight:300}
+
+/* Libro — capítulos bloqueados */
+.libro-cap-item.lci-bloq{opacity:.4;cursor:not-allowed}
+.libro-cap-item.lci-bloq .libro-cap-nom{color:var(--faint)}
+.libro-cap-item.lci-bloq .libro-cap-n{color:var(--faint)}
+.libro-sig-bloq{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--faint);font-style:italic;padding:14px 0}
+.libro-sig-bloq svg{transform:rotate(180deg)}
+
+/* Libro — prosa más aireada y legible */
+.libro-prosa p{font-size:18px;line-height:1.85;color:var(--text);font-weight:300;margin-bottom:22px;max-width:62ch}
+.libro-prosa .libro-p-primero{font-size:19px}
+.libro-prosa .libro-p-primero::first-letter{font-family:var(--sf);font-size:58px;float:left;line-height:.85;padding:6px 14px 0 0;color:var(--gold-lt);font-weight:600}

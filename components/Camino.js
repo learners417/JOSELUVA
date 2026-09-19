@@ -82,8 +82,10 @@ export default function Camino({ state, update }) {
           const abierta_ = semanaDesbloqueada(w.n, state);
           const esActual = w.n === actual;
           const bloqueada = !abierta_;
-          const open = abierta === w.n && !bloqueada;
           const conRueda = SEMANAS_RUEDA.includes(w.n);
+          // Si la semana tiene Rueda y aún no se midió, sus clases esperan.
+          const ruedaPendiente = conRueda && !(state.ruedaTramos || {})[w.n];
+          const open = abierta === w.n && !bloqueada;
 
           return (
             <div
@@ -124,7 +126,25 @@ export default function Camino({ state, update }) {
                 )}
               </button>
 
-              {open && (
+              {open && ruedaPendiente && (
+                <div className="mapa-clases">
+                  <div className="rueda-primero">
+                    <Icono name="llave" size={18} />
+                    <div>
+                      <div className="rueda-primero-t">
+                        Primero, tu rueda de la vida
+                      </div>
+                      <p className="rueda-primero-p">
+                        {w.n === 1
+                          ? "Antes de empezar, mide tu punto de partida. La semana se abre cuando termines."
+                          : "Vuelve a medir tu rueda para abrir esta semana."}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {open && !ruedaPendiente && (
                 <div className="mapa-clases">
                   {w.clases.map((c, i) => {
                     const id = claseId(w.n, i);

@@ -100,7 +100,7 @@ export default function AppShell({ state, update, onReset }) {
       {tab === "valle" && <Valle state={state} update={update} />}
       {tab === "alto" && <Alto state={state} update={update} />}
       {tab === "yo" && <Yo state={state} update={update} goTo={setTab} />}
-      {tab === "libro" && <Libro />}
+      {tab === "libro" && <Libro state={state} />}
 
       <nav className="bottomnav">
         {NAV.map((n) => (
