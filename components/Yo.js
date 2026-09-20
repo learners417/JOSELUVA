@@ -186,42 +186,7 @@ function SubirPlan({ state, update, onVolver }) {
 
 // --- Soporte: mensaje que llega a José en admin ---
 function Soporte({ state, update, onVolver }) {
-  const [texto, setTexto] = useState("");
-  const [contacto, setContacto] = useState("");
-  const [enviado, setEnviado] = useState(false);
-
-  // El mail de José. El botón abre el correo del cliente con todo cargado.
   const MAIL_JOSE = "soy.joseluva@gmail.com";
-
-  const valido = texto.trim().length >= 20 && contacto.trim().length >= 5;
-
-  function enviar() {
-    if (!valido) return;
-    const nombre = state.onboarding?.nombre || "Cliente";
-    const codigo = state.acceso?.codigo || "";
-    const asunto = `Consulta de ${nombre} · Serena Ambición`;
-    const cuerpo =
-      `${texto.trim()}\n\n` +
-      `— — —\n` +
-      `De: ${nombre}\n` +
-      `Mi contacto (para tu respuesta): ${contacto.trim()}\n` +
-      (codigo ? `Código: ${codigo}\n` : "");
-    // Abre el mail del cliente con destinatario, asunto y cuerpo ya escritos.
-    const url =
-      `mailto:${MAIL_JOSE}` +
-      `?subject=${encodeURIComponent(asunto)}` +
-      `&body=${encodeURIComponent(cuerpo)}`;
-    // Guarda una copia local (respaldo) y abre el correo.
-    update({
-      soporteMensajes: [
-        ...(state.soporteMensajes || []),
-        { tipo: "consulta", texto: texto.trim(), de: nombre, contacto: contacto.trim(), codigo, fecha: new Date().toISOString(), leido: false },
-      ],
-    });
-    window.location.href = url;
-    setEnviado(true);
-  }
-
   return (
     <div className="screen">
       <button className="volver-link" onClick={onVolver}>
@@ -232,44 +197,19 @@ function Soporte({ state, update, onVolver }) {
       <p className="screen-sub">
         Este espacio es para lo que de verdad importa en tu proceso: una
         pregunta profunda, una decisión que estás tomando, un pedido concreto.
-        José lo lee personalmente y te responde.
+        Escríbele a su correo y él te responde personalmente.
       </p>
 
-      {enviado ? (
-        <div className="card card-gold">
-          <div className="chip">Ya casi</div>
-          <p className="body-p">
-            Se abrió tu correo con el mensaje listo. Solo toca <strong>Enviar</strong>{" "}
-            en tu aplicación de correo y le llegará a José Luis. Él te responderá
-            personalmente.
-          </p>
-        </div>
-      ) : (
-        <>
-          <textarea
-            className="textarea"
-            value={texto}
-            placeholder="Escribe tu consulta con detalle..."
-            onChange={(e) => setTexto(e.target.value)}
-            style={{ minHeight: 140, marginBottom: 6 }}
-          />
-          {texto.trim().length > 0 && texto.trim().length < 20 && (
-            <div className="bita-min" style={{ marginBottom: 12 }}>
-              Te faltan {20 - texto.trim().length} caracteres.
-            </div>
-          )}
-          <input
-            className="input"
-            value={contacto}
-            placeholder="Tu WhatsApp o correo (para que José te responda)"
-            onChange={(e) => setContacto(e.target.value)}
-            style={{ marginBottom: 16 }}
-          />
-          <button className="btn btn-g" onClick={enviar} disabled={!valido}>
-            Enviar a José Luis
-          </button>
-        </>
-      )}
+      <div className="sop-mail-solo">
+        <span className="sop-mail-lbl">Su correo</span>
+        <a className="sop-mail-link" href={`mailto:${MAIL_JOSE}`}>
+          {MAIL_JOSE}
+        </a>
+      </div>
+
+      <p className="sop-nota">
+        Cuéntale quién eres y desde dónde escribes, para que pueda responderte.
+      </p>
     </div>
   );
 }

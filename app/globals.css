@@ -820,3 +820,16 @@ select.input { appearance: none; -webkit-appearance: none; background-image: url
 .libro-prosa p{font-size:18px;line-height:1.85;color:var(--text);font-weight:300;margin-bottom:22px;max-width:62ch}
 .libro-prosa .libro-p-primero{font-size:19px}
 .libro-prosa .libro-p-primero::first-letter{font-family:var(--sf);font-size:58px;float:left;line-height:.85;padding:6px 14px 0 0;color:var(--gold-lt);font-weight:600}
+
+
+/* Libro — pedir desbloqueo */
+.libro-bloq-box{display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.libro-pedir{font-family:var(--sn);font-size:13.5px;font-weight:600;color:var(--gold);background:transparent;border:1px solid var(--goldd);border-radius:100px;padding:11px 20px;cursor:pointer;text-decoration:none;display:inline-block}
+.libro-pedir:hover{background:var(--goldg)}
+
+/* Soporte — mail directo */
+.sop-mail-solo{border:1px solid var(--goldd);border-radius:var(--rad);padding:24px;background:linear-gradient(180deg,var(--goldg),var(--navy));text-align:center;margin-bottom:16px}
+.sop-mail-lbl{display:block;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:10px}
+.sop-mail-link{font-family:var(--sf);font-size:clamp(20px,4vw,26px);color:var(--gold-lt);font-weight:600;text-decoration:none;word-break:break-all}
+.sop-mail-link:hover{color:var(--cream)}
+.sop-nota{font-size:15px;color:var(--dim);line-height:1.5;font-weight:300;text-align:center}

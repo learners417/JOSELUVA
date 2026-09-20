@@ -65,9 +65,14 @@ export default function Libro({ state }) {
             </button>
           )}
           {idx < LIBRO.length - 1 && !sigAbierto && (
-            <div className="libro-sig-bloq">
-              <Icono name="llave" size={14} /> El siguiente capítulo se abre al
-              avanzar en tu camino
+            <div className="libro-bloq-box">
+              <div className="libro-sig-bloq">
+                <Icono name="llave" size={14} /> El siguiente capítulo se abre al
+                avanzar en tu camino
+              </div>
+              <a className="libro-pedir" href="mailto:soy.joseluva@gmail.com">
+                Escríbele a José para abrirlos
+              </a>
             </div>
           )}
         </div>
